@@ -1,4 +1,4 @@
-package weavers.siltarae.category.domain;
+package weavers.siltarae.tag.domain;
 
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -11,7 +11,7 @@ import java.util.List;
 
 @Entity
 @Getter
-public class Category {
+public class Tag {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -24,8 +24,8 @@ public class Category {
     private User user;
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinTable(name = "category_mistake",
-        joinColumns = @JoinColumn(name = "category_id"),
+    @JoinTable(name = "tag_mistake",
+        joinColumns = @JoinColumn(name = "tag_id"),
         inverseJoinColumns = @JoinColumn(name = "mistake_id"))
     private List<Mistake> mistakes;
 
