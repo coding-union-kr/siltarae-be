@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum ExceptionCode {
     INVALID_REQUEST(1000, "올바르지 않은 요청입니다."),
+    DUPLICATED_TAG_NAME(1001, "중복된 태그명입니다."),
 
     INVALID_MISTAKE_CONTENT_SIZE(2001, "실수 내용은 140자가 넘을 수 없습니다."),
     INVALID_MISTAKE_CONTENT_NULL(2002, "실수 내용은 필수입니다."),
