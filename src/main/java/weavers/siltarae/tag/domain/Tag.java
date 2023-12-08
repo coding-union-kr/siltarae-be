@@ -40,12 +40,11 @@ public class Tag {
     private LocalDateTime deletedAt;
 
     @Builder
-    public Tag(Long id, String name, User user, List<Mistake> mistakes, LocalDateTime createdAt, LocalDateTime deletedAt) {
+    public Tag(Long id, String name, User user, List<Mistake> mistakes, LocalDateTime createdAt) {
         this.id = id;
         this.name = name;
         this.user = user;
         this.mistakes = mistakes;
         this.createdAt = createdAt;
-        this.deletedAt = deletedAt;
     }
 }
