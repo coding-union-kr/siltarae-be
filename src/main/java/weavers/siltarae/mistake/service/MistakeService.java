@@ -77,6 +77,28 @@ public class MistakeService {
                 .build();
     }
 
+
+    public MistakeResponse getMistake(Long memberId, Long mistakeId) {
+        Mistake mistake = mistakeRepository.findByIdAndUserAndDeletedAtIsNull(mistakeId, getTestUser(memberId)).orElseThrow(
+                () -> new BadRequestException(ExceptionCode.NOT_FOUND_MISTAKE)
+        );
+
+        return MistakeResponse.builder()
+                .id(mistake.getId())
+                .content(mistake.getContent())
+                .commentCount(TEST_COMMENT_COUNT)
+                .likeCount(TEST_LIKE_COUNT)
+                .tags(
+                        mistake.getTags().stream().map(
+                                tag -> TagResponse.builder()
+                                        .id(tag.getId())
+                                        .name(tag.getName())
+                                        .build()
+                        ).collect(Collectors.toList())
+                )
+                .build();
+    }
+
     private static final int MAX_MISTAKE_CONTENT_SIZE = 140;
     private static final int MIN_MISTAKE_CONTENT_SIZE = 0;
     private void validateOfMistakeContent(String content) {

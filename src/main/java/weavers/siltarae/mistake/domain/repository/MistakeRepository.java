@@ -10,4 +10,5 @@ import java.util.Optional;
 
 public interface MistakeRepository extends JpaRepository<Mistake, Long> {
     Page<Mistake> findByUserAndDeletedAtIsNullOrderByIdDesc(User user, Pageable pageable);
+    Optional<Mistake> findByIdAndUserAndDeletedAtIsNull(Long id, User user);
 }

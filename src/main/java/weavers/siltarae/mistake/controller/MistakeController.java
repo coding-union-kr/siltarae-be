@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import weavers.siltarae.mistake.dto.request.MistakeCreateRequest;
 import weavers.siltarae.mistake.dto.response.MistakeListResponse;
+import weavers.siltarae.mistake.dto.response.MistakeResponse;
 import weavers.siltarae.mistake.service.MistakeService;
 
 import java.net.URI;
@@ -32,5 +33,11 @@ public class MistakeController {
     @GetMapping
     public ResponseEntity<MistakeListResponse> getMistakes(Pageable pageable) {
         return ResponseEntity.ok(mistakeService.getMistakeList(TEST_USER_ID, pageable));
+    }
+
+    @GetMapping("/{mistakeId}")
+    public ResponseEntity<MistakeResponse> getMistake(
+            @PathVariable("mistakeId") Long mistakeId) {
+        return ResponseEntity.ok(mistakeService.getMistake(TEST_USER_ID, mistakeId));
     }
 }
