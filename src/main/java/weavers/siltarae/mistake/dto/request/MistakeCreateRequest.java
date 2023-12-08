@@ -16,7 +16,7 @@ import java.util.List;
 public class MistakeCreateRequest {
     private List<Long> tagIds;
     
-    @NotNull(message = "실수 내용은 필수 입니다.")
+    @NotBlank(message = "실수 내용은 필수 입니다.")
     @Size(max = 140, message = "실수 내용은 140자를 넘을 수 없습니다.")
     private String content;
 }
