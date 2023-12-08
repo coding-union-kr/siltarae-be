@@ -2,12 +2,17 @@ package weavers.siltarae.mistake.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import weavers.siltarae.global.exception.BadRequestException;
 import weavers.siltarae.global.exception.ExceptionCode;
 import weavers.siltarae.mistake.domain.Mistake;
 import weavers.siltarae.mistake.domain.repository.MistakeRepository;
 import weavers.siltarae.mistake.dto.request.MistakeCreateRequest;
+import weavers.siltarae.mistake.dto.response.MistakeListResponse;
+import weavers.siltarae.mistake.dto.response.MistakeResponse;
+import weavers.siltarae.mistake.dto.response.TagResponse;
 import weavers.siltarae.tag.domain.Tag;
 import weavers.siltarae.tag.domain.repository.TagRepository;
 import weavers.siltarae.user.domain.User;
@@ -17,6 +22,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -40,6 +46,35 @@ public class MistakeService {
         );
 
         return mistake.getId();
+    }
+
+    private static final Integer TEST_COMMENT_COUNT = 13;
+    private static final Integer TEST_LIKE_COUNT = 11;
+
+    public MistakeListResponse getMistakeList(Long memberId, Pageable pageable) {
+        Page<Mistake> mistakes = mistakeRepository.findByUserOrderByIdDesc(getTestUser(memberId), pageable);
+
+        return MistakeListResponse.builder()
+                .totalCount(mistakes.getTotalElements())
+                .mistakes(
+                        mistakes.getContent().stream().map(
+                                mistake -> MistakeResponse.builder()
+                                        .id(mistake.getId())
+                                        .content(mistake.getContent())
+                                        .commentCount(TEST_COMMENT_COUNT)
+                                        .likeCount(TEST_LIKE_COUNT)
+                                        .tags(
+                                                mistake.getTags().stream().map(
+                                                        tag -> TagResponse.builder()
+                                                                .id(tag.getId())
+                                                                .name(tag.getName())
+                                                                .build()
+                                                ).collect(Collectors.toList())
+                                        )
+                                        .build()
+                        ).collect(Collectors.toList())
+                )
+                .build();
     }
 
     private static final int MAX_MISTAKE_CONTENT_SIZE = 140;
