@@ -1,7 +1,10 @@
 package weavers.siltarae.tag.domain;
 
 import jakarta.persistence.*;
+import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
 import weavers.siltarae.mistake.domain.Mistake;
 import weavers.siltarae.user.domain.User;
@@ -11,6 +14,7 @@ import java.util.List;
 
 @Entity
 @Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Tag {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,5 +39,13 @@ public class Tag {
 
     private LocalDateTime deletedAt;
 
-
+    @Builder
+    public Tag(Long id, String name, User user, List<Mistake> mistakes, LocalDateTime createdAt, LocalDateTime deletedAt) {
+        this.id = id;
+        this.name = name;
+        this.user = user;
+        this.mistakes = mistakes;
+        this.createdAt = createdAt;
+        this.deletedAt = deletedAt;
+    }
 }
