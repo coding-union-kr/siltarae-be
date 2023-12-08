@@ -75,16 +75,30 @@ public class MistakeService {
         return userRepository.findById(memberId).orElseThrow(() -> new BadRequestException(ExceptionCode.INVALID_MISTAKE_CONTENT_NULL));
     }
 
-    private List<Tag> getTags(List<Long> categoryIds, Long memberId) {
+    private List<Tag> getTags(List<Long> tagIds, Long memberId) {
         List<Tag> tags
-                = tagRepository.findAllById(categoryIds);
+                = tagRepository.findAllById(tagIds);
 
-        if (tags.stream().anyMatch(tag -> !Objects.equals(tag.getUser().getId(), memberId)) ||
-                !Objects.equals(tags.size(), categoryIds.size())) {
-            throw new BadRequestException(ExceptionCode.INTERNAL_SEVER_ERROR);
-        }
+        validateTag(tagIds, memberId, tags);
 
         return tags;
+    }
+
+    private static void validateTag(List<Long> tagIds, Long memberId, List<Tag> tags) {
+        validateTagByUser(tagIds, memberId, tags);
+        validateExistingTag(tagIds, tags);
+    }
+
+    private static void validateTagByUser(List<Long> tagIds, Long memberId, List<Tag> tags) {
+        if (tags.stream().anyMatch(tag -> !Objects.equals(tag.getUser().getId(), memberId))) {
+            throw new BadRequestException(ExceptionCode.INTERNAL_SEVER_ERROR);
+        }
+    }
+
+    private static void validateExistingTag(List<Long> tagIds, List<Tag> tags) {
+        if (!Objects.equals(tags.size(), tagIds.size())) {
+            throw new BadRequestException(ExceptionCode.INTERNAL_SEVER_ERROR);
+        }
     }
 
 }
