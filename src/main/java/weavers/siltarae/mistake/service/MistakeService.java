@@ -52,7 +52,7 @@ public class MistakeService {
     private static final Integer TEST_LIKE_COUNT = 11;
 
     public MistakeListResponse getMistakeList(Long memberId, Pageable pageable) {
-        Page<Mistake> mistakes = mistakeRepository.findByUserOrderByIdDesc(getTestUser(memberId), pageable);
+        Page<Mistake> mistakes = mistakeRepository.findByUserAndDeletedAtIsNullOrderByIdDesc(getTestUser(memberId), pageable);
 
         return MistakeListResponse.builder()
                 .totalCount(mistakes.getTotalElements())

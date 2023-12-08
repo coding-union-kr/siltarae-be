@@ -6,6 +6,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import weavers.siltarae.mistake.domain.Mistake;
 import weavers.siltarae.user.domain.User;
 
+import java.util.Optional;
+
 public interface MistakeRepository extends JpaRepository<Mistake, Long> {
-    Page<Mistake> findByUserOrderByIdDesc(User user, Pageable pageable);
+    Page<Mistake> findByUserAndDeletedAtIsNullOrderByIdDesc(User user, Pageable pageable);
 }
