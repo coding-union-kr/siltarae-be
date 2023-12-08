@@ -17,7 +17,7 @@ import static weavers.siltarae.global.exception.ExceptionCode.INVALID_REQUEST;
 
 @RestControllerAdvice
 @Slf4j
-public class GlobalExceptionHandel extends ResponseEntityExceptionHandler {
+public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(
             final MethodArgumentNotValidException e,
