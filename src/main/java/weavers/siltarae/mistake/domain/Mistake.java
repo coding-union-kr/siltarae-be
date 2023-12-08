@@ -1,7 +1,6 @@
 package weavers.siltarae.mistake.domain;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,11 +11,11 @@ import weavers.siltarae.user.domain.User;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import static lombok.AccessLevel.PROTECTED;
+
 @Entity
 @Getter
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
+@NoArgsConstructor(access = PROTECTED)
 public class Mistake {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -40,4 +39,13 @@ public class Mistake {
             joinColumns = @JoinColumn(name = "mistake_id"),
             inverseJoinColumns = @JoinColumn(name = "tag_id"))
     private List<Tag> tags;
+
+    @Builder
+    public Mistake(Long id, User user, String content, LocalDateTime createdAt, List<Tag> tags) {
+        this.id = id;
+        this.user = user;
+        this.content = content;
+        this.createdAt = createdAt;
+        this.tags = tags;
+    }
 }
