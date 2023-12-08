@@ -12,7 +12,7 @@ import java.util.List;
 @Getter
 @Builder
 @AllArgsConstructor
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class MistakeCreateRequest {
     private List<Long> tagIds;
     @NotNull(message = "실수 내용은 필수 입니다.")
