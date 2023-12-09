@@ -12,6 +12,7 @@ import weavers.siltarae.mistake.dto.response.MistakeResponse;
 import weavers.siltarae.mistake.service.MistakeService;
 
 import java.net.URI;
+import java.util.List;
 
 @Tag(name = "[실수] 실수 Controller")
 @RestController
@@ -39,5 +40,13 @@ public class MistakeController {
     public ResponseEntity<MistakeResponse> getMistake(
             @PathVariable("mistakeId") Long mistakeId) {
         return ResponseEntity.ok(mistakeService.getMistake(TEST_USER_ID, mistakeId));
+    }
+
+    @PostMapping("/delete")
+    public ResponseEntity<?> deleteMistake(
+            @RequestBody List<Long> ids) {
+        mistakeService.deleteMistake(TEST_USER_ID, ids);
+
+        return ResponseEntity.noContent().build();
     }
 }

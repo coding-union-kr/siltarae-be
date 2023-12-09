@@ -48,4 +48,10 @@ public class Mistake {
         this.createdAt = createdAt;
         this.tags = tags;
     }
+
+    public Mistake deleteMistake(Mistake mistake) {
+        mistake.deletedAt = LocalDateTime.now();
+
+        return mistake;
+    }
 }

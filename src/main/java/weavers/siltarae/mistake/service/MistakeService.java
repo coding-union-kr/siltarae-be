@@ -99,6 +99,17 @@ public class MistakeService {
                 .build();
     }
 
+    public void deleteMistake(Long memberId, List<Long> mistakeIds) {
+        List<Mistake> mistakes
+                = mistakeRepository.findByIdInAndUserAndDeletedAtIsNull(mistakeIds, getTestUser(memberId));
+
+        List<Mistake> deleteMistakes = mistakes.stream()
+                .map(mistake -> mistake.deleteMistake(mistake))
+                .collect(Collectors.toList());
+
+        mistakeRepository.saveAll(deleteMistakes);
+    }
+
     private static final int MAX_MISTAKE_CONTENT_SIZE = 140;
     private static final int MIN_MISTAKE_CONTENT_SIZE = 0;
     private void validateOfMistakeContent(String content) {
