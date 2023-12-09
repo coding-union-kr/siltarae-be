@@ -35,8 +35,6 @@ public class MistakeService {
 
     public Long save(
             MistakeCreateRequest request, Long memberId) {
-        validateOfMistakeContent(request.getContent());
-
         Mistake mistake = mistakeRepository.save(
                 Mistake.builder()
                         .user(getTestUser(memberId))
@@ -73,35 +71,6 @@ public class MistakeService {
         mistakes.forEach(
                 mistake -> mistake.deleteMistake(mistake)
         );
-    }
-
-    private static final int MAX_MISTAKE_CONTENT_SIZE = 140;
-    private static final int MIN_MISTAKE_CONTENT_SIZE = 0;
-    private void validateOfMistakeContent(String content) {
-        validateMaxSizeMistakeContent(content);
-        validateMinSizeMistakeContent(content);
-
-        validateMistakeContent(content);
-    }
-
-    private void validateMistakeContent(String content) {
-        boolean test = Pattern.matches("^[0-9a-zA-Zㄱ-ㅎ가-힣 .,]*$", content);
-
-        if (!test) {
-            throw new BadRequestException(ExceptionCode.INVALID_MISTAKE_CONTENT);
-        }
-    }
-
-    private void validateMinSizeMistakeContent(String content) {
-        if (content.length() == MIN_MISTAKE_CONTENT_SIZE) {
-            throw new BadRequestException(ExceptionCode.INVALID_MISTAKE_CONTENT_NULL);
-        }
-    }
-
-    private void validateMaxSizeMistakeContent(String content) {
-        if (content.length() > MAX_MISTAKE_CONTENT_SIZE) {
-            throw new BadRequestException(ExceptionCode.INVALID_MISTAKE_CONTENT_SIZE);
-        }
     }
 
     private User getTestUser(Long memberId) {
