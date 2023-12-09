@@ -7,6 +7,7 @@ import weavers.siltarae.global.exception.BadRequestException;
 import weavers.siltarae.tag.domain.repository.TagRepository;
 import weavers.siltarae.tag.domain.Tag;
 import weavers.siltarae.tag.dto.request.TagCreateRequest;
+import weavers.siltarae.tag.dto.response.TagListResponse;
 import weavers.siltarae.user.domain.User;
 import weavers.siltarae.user.domain.repository.UserRepository;
 
@@ -25,7 +26,7 @@ public class TagService {
 
     public Long save(final Long userId, final TagCreateRequest tagCreateRequest) {
         final User user = userRepository.findById(userId)
-                .orElseThrow(() -> new BadRequestException(INVALID_REQUEST));
+                .orElseThrow(() -> new BadRequestException(NOT_FOUND_USER));
 
         if (checkDuplicateTagName(user.getId(), tagCreateRequest.getName())) {
             throw new BadRequestException(DUPLICATED_TAG_NAME);
@@ -40,6 +41,11 @@ public class TagService {
         Tag tag = tagRepository.save(createdTag);
 
         return tag.getId();
+    }
+
+    @Transactional(readOnly = true)
+    public TagListResponse getTagList(final Long userId) {
+        return TagListResponse.from(tagRepository.findAllByUser_Id(userId));
     }
 
     private boolean checkDuplicateTagName(final Long userId, final String tagName) {
