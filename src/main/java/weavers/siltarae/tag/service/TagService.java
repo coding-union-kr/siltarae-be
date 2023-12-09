@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import weavers.siltarae.global.exception.BadRequestException;
-import weavers.siltarae.global.exception.ExceptionCode;
 import weavers.siltarae.tag.domain.repository.TagRepository;
 import weavers.siltarae.tag.domain.Tag;
 import weavers.siltarae.tag.dto.request.TagCreateRequest;
@@ -44,6 +43,6 @@ public class TagService {
     }
 
     private boolean checkDuplicateTagName(final Long userId, final String tagName) {
-        return tagRepository.existsByUser_UserIdAndName(userId, tagName);
+        return tagRepository.existsByUser_IdAndName(userId, tagName);
     }
 }
