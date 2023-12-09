@@ -12,6 +12,7 @@ import weavers.siltarae.user.domain.User;
 import weavers.siltarae.user.domain.repository.UserRepository;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import static weavers.siltarae.global.exception.ExceptionCode.*;
 
@@ -48,7 +49,23 @@ public class TagService {
         return TagListResponse.from(tagRepository.findAllByUser_Id(userId));
     }
 
+    public void deleteTags(final List<Long> tagIdList) {
+        List<Tag> tagList = tagRepository.findAllById(tagIdList);
+
+        if(hasDeletedTag(tagList)) {
+            throw new BadRequestException(NOT_FOUND_TAG);
+        }
+
+        tagList.forEach(Tag::delete);
+    }
+
     private boolean checkDuplicateTagName(final Long userId, final String tagName) {
         return tagRepository.existsByUser_IdAndName(userId, tagName);
     }
+
+    private boolean hasDeletedTag(List<Tag> tagList) {
+        return tagList.stream().anyMatch(Tag::isDeleted);
+    }
+
+
 }

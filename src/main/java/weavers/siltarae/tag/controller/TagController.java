@@ -8,6 +8,8 @@ import weavers.siltarae.tag.dto.request.TagCreateRequest;
 import weavers.siltarae.tag.dto.response.TagListResponse;
 import weavers.siltarae.tag.service.TagService;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/v1/tags")
 @RequiredArgsConstructor
@@ -29,5 +31,12 @@ public class TagController {
         TagListResponse tagListResponse = tagService.getTagList(TEMP_USER_ID);
 
         return ResponseEntity.ok(tagListResponse);
+    }
+
+    @PostMapping("/delete")
+    public ResponseEntity<Void> deleteTags(@RequestBody final List<Long> tagIdList) {
+        tagService.deleteTags(tagIdList);
+
+        return ResponseEntity.noContent().build();
     }
 }
