@@ -24,7 +24,7 @@ public class MistakeController {
     private static final Long TEST_USER_ID = 1L;
 
     @PostMapping("")
-    public ResponseEntity<?> createMistake(
+    public ResponseEntity<Void> createMistake(
             @RequestBody @Valid MistakeCreateRequest request) {
         Long mistakeId = mistakeService.save(request, TEST_USER_ID);
 
@@ -43,7 +43,7 @@ public class MistakeController {
     }
 
     @PostMapping("/delete")
-    public ResponseEntity<?> deleteMistake(
+    public ResponseEntity<Void> deleteMistake(
             @RequestBody List<Long> ids) {
         mistakeService.deleteMistake(TEST_USER_ID, ids);
 
