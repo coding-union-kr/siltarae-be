@@ -2,14 +2,20 @@ package weavers.siltarae.mistake.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import weavers.siltarae.global.exception.BadRequestException;
 import weavers.siltarae.global.exception.ExceptionCode;
 import weavers.siltarae.mistake.domain.Mistake;
 import weavers.siltarae.mistake.domain.repository.MistakeRepository;
 import weavers.siltarae.mistake.dto.request.MistakeCreateRequest;
+import weavers.siltarae.mistake.dto.response.MistakeListResponse;
+import weavers.siltarae.mistake.dto.response.MistakeResponse;
 import weavers.siltarae.tag.domain.Tag;
 import weavers.siltarae.tag.domain.repository.TagRepository;
+import weavers.siltarae.tag.dto.response.TagResponse;
 import weavers.siltarae.user.domain.User;
 import weavers.siltarae.user.domain.repository.UserRepository;
 
@@ -17,6 +23,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -40,6 +47,32 @@ public class MistakeService {
         );
 
         return mistake.getId();
+    }
+
+    @Transactional(readOnly = true)
+    public MistakeListResponse getMistakeList(Long memberId, Pageable pageable) {
+        Page<Mistake> mistakes = mistakeRepository.findByUserAndDeletedAtIsNullOrderByIdDesc(getTestUser(memberId), pageable);
+
+        return MistakeListResponse.from(mistakes);
+    }
+
+    @Transactional(readOnly = true)
+    public MistakeResponse getMistake(Long memberId, Long mistakeId) {
+        Mistake mistake = mistakeRepository.findByIdAndUserAndDeletedAtIsNull(mistakeId, getTestUser(memberId))
+        .orElseThrow(() -> new BadRequestException(ExceptionCode.NOT_FOUND_MISTAKE)
+        );
+
+        return MistakeResponse.from(mistake);
+    }
+
+    @Transactional
+    public void deleteMistake(Long memberId, List<Long> mistakeIds) {
+        List<Mistake> mistakes
+                = mistakeRepository.findByIdInAndUserAndDeletedAtIsNull(mistakeIds, getTestUser(memberId));
+
+        mistakes.forEach(
+                mistake -> mistake.deleteMistake(mistake)
+        );
     }
 
     private static final int MAX_MISTAKE_CONTENT_SIZE = 140;
