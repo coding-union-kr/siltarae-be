@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import weavers.siltarae.global.exception.BadRequestException;
 import weavers.siltarae.global.exception.ExceptionCode;
 import weavers.siltarae.mistake.domain.Mistake;
@@ -12,9 +13,9 @@ import weavers.siltarae.mistake.domain.repository.MistakeRepository;
 import weavers.siltarae.mistake.dto.request.MistakeCreateRequest;
 import weavers.siltarae.mistake.dto.response.MistakeListResponse;
 import weavers.siltarae.mistake.dto.response.MistakeResponse;
-import weavers.siltarae.mistake.dto.response.TagResponse;
 import weavers.siltarae.tag.domain.Tag;
 import weavers.siltarae.tag.domain.repository.TagRepository;
+import weavers.siltarae.tag.dto.response.TagResponse;
 import weavers.siltarae.user.domain.User;
 import weavers.siltarae.user.domain.repository.UserRepository;
 
@@ -99,15 +100,14 @@ public class MistakeService {
                 .build();
     }
 
+    @Transactional
     public void deleteMistake(Long memberId, List<Long> mistakeIds) {
         List<Mistake> mistakes
                 = mistakeRepository.findByIdInAndUserAndDeletedAtIsNull(mistakeIds, getTestUser(memberId));
 
-        List<Mistake> deleteMistakes = mistakes.stream()
-                .map(mistake -> mistake.deleteMistake(mistake))
-                .collect(Collectors.toList());
-
-        mistakeRepository.saveAll(deleteMistakes);
+        mistakes.forEach(
+                mistake -> mistake.deleteMistake(mistake)
+        );
     }
 
     private static final int MAX_MISTAKE_CONTENT_SIZE = 140;

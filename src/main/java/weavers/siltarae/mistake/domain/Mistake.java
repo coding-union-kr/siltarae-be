@@ -49,9 +49,7 @@ public class Mistake {
         this.tags = tags;
     }
 
-    public Mistake deleteMistake(Mistake mistake) {
+    public void deleteMistake(Mistake mistake) {
         mistake.deletedAt = LocalDateTime.now();
-
-        return mistake;
     }
 }
