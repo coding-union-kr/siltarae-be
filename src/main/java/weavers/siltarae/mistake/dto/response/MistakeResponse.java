@@ -3,6 +3,7 @@ package weavers.siltarae.mistake.dto.response;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import weavers.siltarae.tag.dto.response.TagResponse;
 
 import java.util.List;
 

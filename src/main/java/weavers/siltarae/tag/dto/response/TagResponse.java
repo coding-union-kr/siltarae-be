@@ -1,4 +1,4 @@
-package weavers.siltarae.mistake.dto.response;
+package weavers.siltarae.tag.dto.response;
 
 import lombok.Builder;
 import lombok.Getter;
