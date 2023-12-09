@@ -13,4 +13,12 @@ public class TagTestFixture {
                 .createdAt(LocalDateTime.now())
                 .build();
     }
+
+    public static Tag DAILY_TAG() {
+        return Tag.builder()
+                .id(1L)
+                .name("일상")
+                .createdAt(LocalDateTime.now())
+                .build();
+    }
 }
