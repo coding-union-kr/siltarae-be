@@ -58,8 +58,8 @@ public class MistakeService {
 
     @Transactional(readOnly = true)
     public MistakeResponse getMistake(Long memberId, Long mistakeId) {
-        Mistake mistake = mistakeRepository.findByIdAndUserAndDeletedAtIsNull(mistakeId, getTestUser(memberId)).orElseThrow(
-                () -> new BadRequestException(ExceptionCode.NOT_FOUND_MISTAKE)
+        Mistake mistake = mistakeRepository.findByIdAndUserAndDeletedAtIsNull(mistakeId, getTestUser(memberId))
+        .orElseThrow(() -> new BadRequestException(ExceptionCode.NOT_FOUND_MISTAKE)
         );
 
         return MistakeResponse.from(mistake);
