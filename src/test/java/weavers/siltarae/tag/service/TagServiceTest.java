@@ -12,6 +12,7 @@ import weavers.siltarae.tag.dto.request.TagCreateRequest;
 import weavers.siltarae.tag.dto.response.TagListResponse;
 import weavers.siltarae.user.domain.repository.UserRepository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -37,14 +38,14 @@ class TagServiceTest {
     @Test
     void 태그_생성_후_tagId를_반환한다() {
         // given
-        final TagCreateRequest tagCreateRequest = new TagCreateRequest("tagName");
-        given(userRepository.findById(anyLong()))
+        final TagCreateRequest tagCreateRequest = new TagCreateRequest(COMPANY_TAG.getName());
+        given(userRepository.findById(2L))
                 .willReturn(Optional.ofNullable(USER_KIM()));
         given(tagRepository.save(any(Tag.class)))
-                .willReturn(COMPANY_TAG());
+                .willReturn(COMPANY_TAG);
 
         // when
-        final Long actualId = tagService.save(1L, tagCreateRequest);
+        final Long actualId = tagService.save(2L, tagCreateRequest);
 
         // then
         assertThat(actualId).isEqualTo(1L);
@@ -67,6 +68,12 @@ class TagServiceTest {
         assertThat(e.getMessage()).isEqualTo("중복된 태그명입니다.");
     }
 
+    static Tag COMPANY_TAG = Tag.builder()
+            .id(1L)
+            .name("회사")
+            .createdAt(LocalDateTime.now())
+            .build();
+
     @Test
     void 사용자의_태그_목록을_조회할_수_있다() {
         // given
@@ -85,9 +92,9 @@ class TagServiceTest {
         // given
         given(tagRepository.findAllById(anyList()))
                 .willReturn(List.of(COMPANY_TAG(), DELETED_TAG(), DAILY_TAG()));
+        List<Long> tagIdList = List.of(1L, 2L, 3L);
 
         // when
-        List<Long> tagIdList = List.of(1L, 2L, 3L);
 
         // then
         assertThatThrownBy(() -> tagService.deleteTags(tagIdList))
