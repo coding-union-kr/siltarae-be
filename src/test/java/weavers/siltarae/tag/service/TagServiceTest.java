@@ -19,8 +19,7 @@ import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.*;
-import static weavers.siltarae.tag.TagTestFixture.COMPANY_TAG;
-import static weavers.siltarae.tag.TagTestFixture.DAILY_TAG;
+import static weavers.siltarae.tag.TagTestFixture.*;
 import static weavers.siltarae.user.UserTestFixture.USER_KIM;
 
 @ExtendWith(MockitoExtension.class)
@@ -79,5 +78,20 @@ class TagServiceTest {
 
         // then
         assertThat(tagList.getTotalCount()).isEqualTo(2);
+    }
+
+    @Test
+    void 이미_삭제된_태그를_삭제하면_예외가_발생한다() {
+        // given
+        given(tagRepository.findAllById(anyList()))
+                .willReturn(List.of(COMPANY_TAG(), DELETED_TAG(), DAILY_TAG()));
+
+        // when
+        List<Long> tagIdList = List.of(1L, 2L, 3L);
+
+        // then
+        assertThatThrownBy(() -> tagService.deleteTags(tagIdList))
+                .isInstanceOf(BadRequestException.class)
+                .hasMessage("해당하는 태그가 존재하지 않습니다.");
     }
 }

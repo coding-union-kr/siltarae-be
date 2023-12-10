@@ -21,8 +21,7 @@ import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import static weavers.siltarae.tag.TagTestFixture.COMPANY_TAG;
-import static weavers.siltarae.tag.TagTestFixture.DAILY_TAG;
+import static weavers.siltarae.tag.TagTestFixture.*;
 
 @WebMvcTest(TagController.class)
 class TagControllerTest {
@@ -99,5 +98,14 @@ class TagControllerTest {
                 TagListResponse.class
         );
         assertThat(tagListResponse.getTotalCount()).isEqualTo(2);
+    }
+
+    @Test
+    void 태그_삭제_요청에_성공한다() {
+        // given
+
+        // when
+
+        // then
     }
 }
