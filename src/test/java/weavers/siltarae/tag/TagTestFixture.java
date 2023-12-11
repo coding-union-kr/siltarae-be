@@ -2,15 +2,12 @@ package weavers.siltarae.tag;
 
 import weavers.siltarae.tag.domain.Tag;
 
-import java.time.LocalDateTime;
-
 public class TagTestFixture {
 
     public static Tag COMPANY_TAG() {
         return Tag.builder()
                 .id(1L)
                 .name("회사")
-                .createdAt(LocalDateTime.now())
                 .build();
     }
 
@@ -18,7 +15,6 @@ public class TagTestFixture {
         return Tag.builder()
                 .id(1L)
                 .name("일상")
-                .createdAt(LocalDateTime.now())
                 .build();
     }
 
@@ -26,7 +22,6 @@ public class TagTestFixture {
         Tag deletedTag = Tag.builder()
                             .id(1L)
                             .name("모의고사")
-                            .createdAt(LocalDateTime.of(2018, 3, 15, 23, 2))
                             .build();
 
         deletedTag.delete();

@@ -15,15 +15,11 @@ import weavers.siltarae.mistake.dto.response.MistakeListResponse;
 import weavers.siltarae.mistake.dto.response.MistakeResponse;
 import weavers.siltarae.tag.domain.Tag;
 import weavers.siltarae.tag.domain.repository.TagRepository;
-import weavers.siltarae.tag.dto.response.TagResponse;
 import weavers.siltarae.user.domain.User;
 import weavers.siltarae.user.domain.repository.UserRepository;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
-import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -39,7 +35,6 @@ public class MistakeService {
                 Mistake.builder()
                         .user(getTestUser(memberId))
                         .content(request.getContent())
-                        .createdAt(LocalDateTime.now())
                         .tags(getTags(request.getTagIds(), memberId))
                         .build()
         );
@@ -68,9 +63,7 @@ public class MistakeService {
         List<Mistake> mistakes
                 = mistakeRepository.findByIdInAndUserAndDeletedAtIsNull(mistakeIds, getTestUser(memberId));
 
-        mistakes.forEach(
-                mistake -> mistake.deleteMistake(mistake)
-        );
+        mistakes.forEach(Mistake::delete);
     }
 
     private User getTestUser(Long memberId) {

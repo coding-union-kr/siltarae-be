@@ -5,17 +5,16 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.CreatedDate;
+import weavers.siltarae.global.BaseEntity;
 import weavers.siltarae.mistake.domain.Mistake;
 import weavers.siltarae.user.domain.User;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Tag {
+public class Tag extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -33,27 +32,17 @@ public class Tag {
         inverseJoinColumns = @JoinColumn(name = "mistake_id"))
     private List<Mistake> mistakes;
 
-    @CreatedDate
-    @Column(updatable = false, nullable = false)
-    private LocalDateTime createdAt;
-
-    private LocalDateTime deletedAt;
-
     @Builder
-    public Tag(Long id, String name, User user, List<Mistake> mistakes, LocalDateTime createdAt) {
+    public Tag(Long id, String name, User user, List<Mistake> mistakes) {
         this.id = id;
         this.name = name;
         this.user = user;
         this.mistakes = mistakes;
-        this.createdAt = createdAt;
     }
 
+    @Override
     public void delete() {
+        super.delete();
         this.getMistakes().clear();
-        this.deletedAt = LocalDateTime.now();
-    }
-
-    public boolean isDeleted() {
-        return (this.deletedAt != null);
     }
 }
