@@ -46,7 +46,12 @@ public class TagService {
 
     @Transactional(readOnly = true)
     public TagListResponse getTagList(final Long userId) {
-        return TagListResponse.from(tagRepository.findAllByUser_Id(userId));
+        List<Tag> tagList = tagRepository.findAllByUser_Id(userId)
+                .stream()
+                .filter(tag -> !tag.isDeleted())
+                .toList();
+
+        return TagListResponse.from(tagList);
     }
 
     public void deleteTags(final List<Long> tagIdList) {
