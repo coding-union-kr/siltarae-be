@@ -15,7 +15,6 @@ import weavers.siltarae.user.domain.SocialType;
 import weavers.siltarae.user.domain.User;
 import weavers.siltarae.user.domain.repository.UserRepository;
 
-import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.Optional;
 
@@ -38,14 +37,12 @@ public class MistakeServiceTest {
     User MOCK_USER = User.builder()
             .id(1L)
             .email("siltarae@nn.com")
-            .createdAt(LocalDateTime.now())
             .nickname("실타래")
             .socialType(SocialType.GOOGLE)
             .build();
 
     Tag MOCK_TAG = Tag.builder()
             .id(1L)
-            .createdAt(LocalDateTime.now())
             .name("태그")
             .user(MOCK_USER)
             .build();
@@ -55,7 +52,6 @@ public class MistakeServiceTest {
             .tags(Collections.singletonList(MOCK_TAG))
             .user(MOCK_USER)
             .content("실수 내용 입니다")
-            .createdAt(LocalDateTime.now())
             .build();
 
     @Test

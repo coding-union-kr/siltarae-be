@@ -5,14 +5,13 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.CreatedDate;
+import weavers.siltarae.global.BaseEntity;
 
-import java.time.LocalDateTime;
 
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class User {
+public class User extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,23 +26,16 @@ public class User {
     @Column(nullable = false)
     private String email;
 
-    @CreatedDate
-    @Column(updatable = false, nullable = false)
-    private LocalDateTime createdAt;
-
-    private LocalDateTime deletedAt;
-
     @Enumerated(value = EnumType.STRING)
     @Column(nullable = false)
     private SocialType socialType;
 
     @Builder
-    public User(Long id, String identifier, String nickname, String email, LocalDateTime createdAt, SocialType socialType) {
+    public User(Long id, String identifier, String nickname, String email, SocialType socialType) {
         this.id = id;
         this.identifier = identifier;
         this.nickname = nickname;
         this.email = email;
-        this.createdAt = createdAt;
         this.socialType = socialType;
     }
 }

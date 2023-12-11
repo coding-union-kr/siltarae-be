@@ -12,7 +12,6 @@ import weavers.siltarae.tag.dto.request.TagCreateRequest;
 import weavers.siltarae.tag.dto.response.TagListResponse;
 import weavers.siltarae.user.domain.repository.UserRepository;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -38,11 +37,11 @@ class TagServiceTest {
     @Test
     void 태그_생성_후_tagId를_반환한다() {
         // given
-        final TagCreateRequest tagCreateRequest = new TagCreateRequest(COMPANY_TAG.getName());
+        final TagCreateRequest tagCreateRequest = new TagCreateRequest(COMPANY_TAG().getName());
         given(userRepository.findById(2L))
                 .willReturn(Optional.ofNullable(USER_KIM()));
         given(tagRepository.save(any(Tag.class)))
-                .willReturn(COMPANY_TAG);
+                .willReturn(COMPANY_TAG());
 
         // when
         final Long actualId = tagService.save(2L, tagCreateRequest);
@@ -67,12 +66,6 @@ class TagServiceTest {
         // then
         assertThat(e.getMessage()).isEqualTo("중복된 태그명입니다.");
     }
-
-    static Tag COMPANY_TAG = Tag.builder()
-            .id(1L)
-            .name("회사")
-            .createdAt(LocalDateTime.now())
-            .build();
 
     @Test
     void 사용자의_태그_목록을_조회할_수_있다() {
@@ -101,4 +94,5 @@ class TagServiceTest {
                 .isInstanceOf(BadRequestException.class)
                 .hasMessage("해당하는 태그가 존재하지 않습니다.");
     }
+
 }

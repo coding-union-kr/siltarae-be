@@ -11,7 +11,6 @@ import weavers.siltarae.tag.dto.response.TagListResponse;
 import weavers.siltarae.user.domain.User;
 import weavers.siltarae.user.domain.repository.UserRepository;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 import static weavers.siltarae.global.exception.ExceptionCode.*;
@@ -36,7 +35,6 @@ public class TagService {
         final Tag createdTag = Tag.builder()
                 .name(tagCreateRequest.getName())
                 .user(user)
-                .createdAt(LocalDateTime.now())
                 .build();
 
         Tag tag = tagRepository.save(createdTag);
