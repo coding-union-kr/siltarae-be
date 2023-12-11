@@ -49,6 +49,7 @@ public class Tag {
     }
 
     public void delete() {
+        this.getMistakes().clear();
         this.deletedAt = LocalDateTime.now();
     }
 
