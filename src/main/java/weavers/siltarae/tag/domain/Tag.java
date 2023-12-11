@@ -47,4 +47,13 @@ public class Tag {
         this.mistakes = mistakes;
         this.createdAt = createdAt;
     }
+
+    public void delete() {
+        this.getMistakes().clear();
+        this.deletedAt = LocalDateTime.now();
+    }
+
+    public boolean isDeleted() {
+        return (this.deletedAt != null);
+    }
 }

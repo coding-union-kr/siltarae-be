@@ -7,10 +7,12 @@ import weavers.siltarae.global.exception.BadRequestException;
 import weavers.siltarae.tag.domain.repository.TagRepository;
 import weavers.siltarae.tag.domain.Tag;
 import weavers.siltarae.tag.dto.request.TagCreateRequest;
+import weavers.siltarae.tag.dto.response.TagListResponse;
 import weavers.siltarae.user.domain.User;
 import weavers.siltarae.user.domain.repository.UserRepository;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import static weavers.siltarae.global.exception.ExceptionCode.*;
 
@@ -25,7 +27,7 @@ public class TagService {
 
     public Long save(final Long userId, final TagCreateRequest tagCreateRequest) {
         final User user = userRepository.findById(userId)
-                .orElseThrow(() -> new BadRequestException(INVALID_REQUEST));
+                .orElseThrow(() -> new BadRequestException(NOT_FOUND_USER));
 
         if (checkDuplicateTagName(user.getId(), tagCreateRequest.getName())) {
             throw new BadRequestException(DUPLICATED_TAG_NAME);
@@ -42,7 +44,30 @@ public class TagService {
         return tag.getId();
     }
 
+    @Transactional(readOnly = true)
+    public TagListResponse getTagList(final Long userId) {
+        List<Tag> tagList = tagRepository.findAllByUser_IdAndDeletedAtIsNotNull(userId);
+
+        return TagListResponse.from(tagList);
+    }
+
+    public void deleteTags(final List<Long> tagIdList) {
+        List<Tag> tagList = tagRepository.findAllById(tagIdList);
+
+        if(hasDeletedTag(tagList)) {
+            throw new BadRequestException(NOT_FOUND_TAG);
+        }
+
+        tagList.forEach(Tag::delete);
+    }
+
     private boolean checkDuplicateTagName(final Long userId, final String tagName) {
         return tagRepository.existsByUser_IdAndName(userId, tagName);
     }
+
+    private boolean hasDeletedTag(List<Tag> tagList) {
+        return tagList.stream().anyMatch(Tag::isDeleted);
+    }
+
+
 }

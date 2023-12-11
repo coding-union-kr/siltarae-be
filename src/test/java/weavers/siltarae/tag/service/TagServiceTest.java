@@ -9,15 +9,18 @@ import weavers.siltarae.global.exception.BadRequestException;
 import weavers.siltarae.tag.domain.repository.TagRepository;
 import weavers.siltarae.tag.domain.Tag;
 import weavers.siltarae.tag.dto.request.TagCreateRequest;
+import weavers.siltarae.tag.dto.response.TagListResponse;
 import weavers.siltarae.user.domain.repository.UserRepository;
 
+import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.*;
-import static weavers.siltarae.tag.TagTestFixture.COMPANY_TAG;
+import static weavers.siltarae.tag.TagTestFixture.*;
 import static weavers.siltarae.user.UserTestFixture.USER_KIM;
 
 @ExtendWith(MockitoExtension.class)
@@ -35,14 +38,14 @@ class TagServiceTest {
     @Test
     void 태그_생성_후_tagId를_반환한다() {
         // given
-        final TagCreateRequest tagCreateRequest = new TagCreateRequest("tagName");
-        given(userRepository.findById(anyLong()))
+        final TagCreateRequest tagCreateRequest = new TagCreateRequest(COMPANY_TAG.getName());
+        given(userRepository.findById(2L))
                 .willReturn(Optional.ofNullable(USER_KIM()));
         given(tagRepository.save(any(Tag.class)))
-                .willReturn(COMPANY_TAG());
+                .willReturn(COMPANY_TAG);
 
         // when
-        final Long actualId = tagService.save(1L, tagCreateRequest);
+        final Long actualId = tagService.save(2L, tagCreateRequest);
 
         // then
         assertThat(actualId).isEqualTo(1L);
@@ -63,5 +66,39 @@ class TagServiceTest {
 
         // then
         assertThat(e.getMessage()).isEqualTo("중복된 태그명입니다.");
+    }
+
+    static Tag COMPANY_TAG = Tag.builder()
+            .id(1L)
+            .name("회사")
+            .createdAt(LocalDateTime.now())
+            .build();
+
+    @Test
+    void 사용자의_태그_목록을_조회할_수_있다() {
+        // given
+        given(tagRepository.findAllByUser_IdAndDeletedAtIsNotNull(1L))
+                .willReturn(List.of(COMPANY_TAG(), DAILY_TAG()));
+
+        // when
+        TagListResponse tagList = tagService.getTagList(1L);
+
+        // then
+        assertThat(tagList.getTotalCount()).isEqualTo(2);
+    }
+
+    @Test
+    void 이미_삭제된_태그를_삭제하면_예외가_발생한다() {
+        // given
+        given(tagRepository.findAllById(anyList()))
+                .willReturn(List.of(COMPANY_TAG(), DELETED_TAG(), DAILY_TAG()));
+        List<Long> tagIdList = List.of(1L, 2L, 3L);
+
+        // when
+
+        // then
+        assertThatThrownBy(() -> tagService.deleteTags(tagIdList))
+                .isInstanceOf(BadRequestException.class)
+                .hasMessage("해당하는 태그가 존재하지 않습니다.");
     }
 }
