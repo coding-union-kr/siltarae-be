@@ -71,6 +71,6 @@ jobs:
           script: |
               sudo docker rm -f $(docker ps -qa)
               sudo docker pull ${{ secrets.DOCKERHUB_REPO }}/weavers
-              docker-compose up -d
+              docker-compose up -d 
               docker image prune -f 
       
