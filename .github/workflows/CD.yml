@@ -70,7 +70,8 @@ jobs:
           envs: GITHUB_SHA
           script: |
               sudo docker rm -f $(docker ps -qa)
-              sudo docker pull ${{ secrets.DOCKERHUB_REPO }}/weavers 
+              docker login -u ${{ secrets.DOCKERHUB_USERNAME }} -p ${{ secrets.DOCKERHUB_PASSWORD }}
+              docker pull ${{ secrets.DOCKERHUB_REPO }}/weavers 
               docker-compose up -d 
               docker image prune -f 
       
