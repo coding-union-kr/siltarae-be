@@ -36,6 +36,17 @@ jobs:
          echo "${{ secrets.APPLICATIONYML_PROD }}" > ./application.yml
       shell: bash
 
+    ## gradle caching
+    - name: Gradle Caching
+      uses: actions/cache@v3
+      with:
+        path: |
+          ~/.gradle/caches
+          ~/.gradle/wrapper
+        key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+        restore-keys: |
+          ${{ runner.os }}-gradle-
+
     - name: Build with Gradle
       run: |
           chmod +x ./gradlew
@@ -45,21 +56,5 @@ jobs:
       if: contains(github.ref, 'main')
       run: |
           docker login -u ${{ secrets.DOCKERHUB_USERNAME }} -p ${{ secrets.DOCKERHUB_PASSWORD }}
-          docker build -f Dockerfile-prod -t ${{ secrets.DOCKERHUB_REPO }}/dotoriham-prod .
-          docker push ${{ secrets.DOCKERHUB_REPO }}/dotoriham-prod
-
-    - name: Deploy to prod
-      uses: appleboy/ssh-action@master
-      id: deploy-prod
-      if: contains(github.ref, 'main')
-      with:
-          host: ${{ secrets.HOST }}
-          username: ec2-user
-          key: ${{ secrets.KEY }}
-          envs: GITHUB_SHA
-          script: |
-              sudo docker rm -f $(docker ps -qa)
-              sudo docker pull ${{ secrets.DOCKERHUB_REPO }}/dotoriham-prod
-              docker-compose up -d
-              docker image prune -f
-      
+          docker build -f Dockerfile-prod -t ${{ secrets.DOCKERHUB_REPO }}:${{ secrets.TAG }} .
+          docker push ${{ secrets.DOCKERHUB_REPO }}:${{ secrets.TAG }}
