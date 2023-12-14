@@ -21,7 +21,7 @@ public class Mistake extends BaseEntity {
     private Long id;
 
     @ManyToOne(cascade = CascadeType.DETACH, fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "member_id")
     private Member member;
 
     @Column(nullable = false, length = 140)
