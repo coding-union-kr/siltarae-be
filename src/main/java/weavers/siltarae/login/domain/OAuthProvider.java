@@ -1,11 +1,17 @@
 package weavers.siltarae.login.domain;
 
-public interface OAuthProvider {
+import weavers.siltarae.login.dto.response.UserInfoResponse;
 
-    boolean isMatched(String socialType);
+public abstract class OAuthProvider {
 
-    void getUserInfo(String accessToken);
+    String SOCIAL_TYPE;
 
-    String requestAccessToken(String code);
+    boolean isMatched(String socialType) {
+        return socialType.equals(SOCIAL_TYPE);
+    }
+
+    abstract UserInfoResponse getUserInfo(String accessToken);
+
+    abstract String requestAccessToken(String code);
 
 }

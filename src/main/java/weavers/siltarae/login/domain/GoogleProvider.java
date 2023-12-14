@@ -7,17 +7,19 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import weavers.siltarae.login.dto.request.OAuthAccessTokenRequest;
 import weavers.siltarae.login.dto.response.OAuthAccessTokenResponse;
+import weavers.siltarae.login.dto.response.UserInfoResponse;
+import weavers.siltarae.user.domain.SocialType;
 
 import java.net.URI;
 
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class GoogleProvider implements OAuthProvider {
+public class GoogleProvider extends OAuthProvider {
 
     private final GoogleAuthClient googleAuthClient;
 
-    private final String SOCIAL_TYPE = "google";
+    private final String SOCIAL_TYPE = "GOOGLE";
 
     @Value("${oauth2.google.client-id}")
     private String CLIENT_ID;
@@ -35,15 +37,15 @@ public class GoogleProvider implements OAuthProvider {
     private String USERINFO_BASE_URI;
 
     @Override
-    public boolean isMatched(String socialType) {
-        return socialType.equals(SOCIAL_TYPE);
-    }
+    public UserInfoResponse getUserInfo(String accessToken) {
 
-    @Override
-    public void getUserInfo(String accessToken) {
+        ResponseEntity<UserInfoResponse> response = googleAuthClient.getUserInfo(URI.create(USERINFO_BASE_URI), accessToken);
 
-        ResponseEntity<String> userInfo = googleAuthClient.getUserInfo(URI.create(USERINFO_BASE_URI), accessToken);
-        log.info("userInfo = {}", userInfo);
+        UserInfoResponse userInfo = response.getBody();
+        userInfo.setSocialType(SocialType.GOOGLE);
+        // TODO 응답코드 체크
+
+        return userInfo;
     }
 
     @Override
@@ -57,6 +59,8 @@ public class GoogleProvider implements OAuthProvider {
                 .code(code).build();
 
         ResponseEntity<OAuthAccessTokenResponse> response = googleAuthClient.getAccessToken(request);
+
+        // TODO 응답코드 체크
 
         OAuthAccessTokenResponse accessTokenResponse = response.getBody();
         log.info("accessToken = {}", accessTokenResponse.getAccessToken());
