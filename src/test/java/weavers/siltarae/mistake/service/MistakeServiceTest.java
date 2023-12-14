@@ -11,9 +11,9 @@ import weavers.siltarae.mistake.domain.repository.MistakeRepository;
 import weavers.siltarae.mistake.dto.request.MistakeCreateRequest;
 import weavers.siltarae.tag.domain.Tag;
 import weavers.siltarae.tag.domain.repository.TagRepository;
-import weavers.siltarae.user.domain.SocialType;
-import weavers.siltarae.user.domain.User;
-import weavers.siltarae.user.domain.repository.UserRepository;
+import weavers.siltarae.member.domain.SocialType;
+import weavers.siltarae.member.domain.Member;
+import weavers.siltarae.member.domain.repository.MemberRepository;
 
 import java.util.Collections;
 import java.util.Optional;
@@ -32,9 +32,9 @@ public class MistakeServiceTest {
     @Mock
     private TagRepository tagRepository;
     @Mock
-    private UserRepository userRepository;
+    private MemberRepository memberRepository;
 
-    User MOCK_USER = User.builder()
+    Member MOCK_Member = Member.builder()
             .id(1L)
             .email("siltarae@nn.com")
             .nickname("실타래")
@@ -44,20 +44,20 @@ public class MistakeServiceTest {
     Tag MOCK_TAG = Tag.builder()
             .id(1L)
             .name("태그")
-            .user(MOCK_USER)
+            .member(MOCK_Member)
             .build();
 
     Mistake MOCK_MISTAKE = Mistake.builder()
             .id(1L)
             .tags(Collections.singletonList(MOCK_TAG))
-            .user(MOCK_USER)
+            .member(MOCK_Member)
             .content("실수 내용 입니다")
             .build();
 
     @Test
     public void 실수를_등록한다() {
         // given
-        given(userRepository.findById(anyLong())).willReturn(Optional.ofNullable(MOCK_USER));
+        given(memberRepository.findById(anyLong())).willReturn(Optional.ofNullable(MOCK_Member));
         given(tagRepository.findAllById(anyList())).willReturn(Collections.singletonList(MOCK_TAG));
         given(mistakeRepository.save(any(Mistake.class))).willReturn(MOCK_MISTAKE);
 

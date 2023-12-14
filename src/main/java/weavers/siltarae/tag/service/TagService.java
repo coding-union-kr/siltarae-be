@@ -8,8 +8,8 @@ import weavers.siltarae.tag.domain.repository.TagRepository;
 import weavers.siltarae.tag.domain.Tag;
 import weavers.siltarae.tag.dto.request.TagCreateRequest;
 import weavers.siltarae.tag.dto.response.TagListResponse;
-import weavers.siltarae.user.domain.User;
-import weavers.siltarae.user.domain.repository.UserRepository;
+import weavers.siltarae.member.domain.Member;
+import weavers.siltarae.member.domain.repository.MemberRepository;
 
 import java.util.List;
 
@@ -22,19 +22,19 @@ public class TagService {
 
     private final TagRepository tagRepository;
 
-    private final UserRepository userRepository;
+    private final MemberRepository memberRepository;
 
-    public Long save(final Long userId, final TagCreateRequest tagCreateRequest) {
-        final User user = userRepository.findById(userId)
+    public Long save(final Long memberId, final TagCreateRequest tagCreateRequest) {
+        final Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new BadRequestException(NOT_FOUND_USER));
 
-        if (checkDuplicateTagName(user.getId(), tagCreateRequest.getName())) {
+        if (checkDuplicateTagName(member.getId(), tagCreateRequest.getName())) {
             throw new BadRequestException(DUPLICATED_TAG_NAME);
         }
 
         final Tag createdTag = Tag.builder()
                 .name(tagCreateRequest.getName())
-                .user(user)
+                .member(member)
                 .build();
 
         Tag tag = tagRepository.save(createdTag);
@@ -43,8 +43,8 @@ public class TagService {
     }
 
     @Transactional(readOnly = true)
-    public TagListResponse getTagList(final Long userId) {
-        List<Tag> tagList = tagRepository.findAllByUser_IdAndDeletedAtIsNotNull(userId);
+    public TagListResponse getTagList(final Long memberId) {
+        List<Tag> tagList = tagRepository.findAllByMember_IdAndDeletedAtIsNotNull(memberId);
 
         return TagListResponse.from(tagList);
     }
@@ -59,8 +59,8 @@ public class TagService {
         tagList.forEach(Tag::delete);
     }
 
-    private boolean checkDuplicateTagName(final Long userId, final String tagName) {
-        return tagRepository.existsByUser_IdAndName(userId, tagName);
+    private boolean checkDuplicateTagName(final Long memberId, final String tagName) {
+        return tagRepository.existsByMember_IdAndName(memberId, tagName);
     }
 
     private boolean hasDeletedTag(List<Tag> tagList) {

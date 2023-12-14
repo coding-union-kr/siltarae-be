@@ -1,4 +1,4 @@
-package weavers.siltarae.user.domain;
+package weavers.siltarae.member.domain;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -11,7 +11,7 @@ import weavers.siltarae.global.BaseEntity;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class User extends BaseEntity {
+public class Member extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,7 +31,7 @@ public class User extends BaseEntity {
     private SocialType socialType;
 
     @Builder
-    public User(Long id, String identifier, String nickname, String email, SocialType socialType) {
+    public Member(Long id, String identifier, String nickname, String email, SocialType socialType) {
         this.id = id;
         this.identifier = identifier;
         this.nickname = nickname;
