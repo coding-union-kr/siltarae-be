@@ -14,7 +14,6 @@ public enum ExceptionCode {
     INVALID_MISTAKE_CONTENT(2003, "실수 내용에는 한글, 영어, 숫자만 허용됩니다."),
     NOT_FOUND_MISTAKE(2004, "해당하는 실수가 존재하지 않습니다."),
 
-    DUPLICATED_TAG_NAME(3001, "중복된 태그명입니다."),
     NOT_FOUND_TAG(3002, "해당하는 태그가 존재하지 않습니다."),
 
     NOT_FOUND_USER(4001, "해당하는 유저가 존재하지 않습니다."),
