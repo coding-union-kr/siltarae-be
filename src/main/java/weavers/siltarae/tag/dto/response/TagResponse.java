@@ -29,4 +29,11 @@ public class TagResponse {
                 .mistakeCount(tag.getMistakes().size())
                 .build();
     }
+
+    public static TagResponse from(Tag tag) {
+        return TagResponse.builder()
+                .id(tag.getId())
+                .name(tag.getName())
+                .build();
+    }
 }
