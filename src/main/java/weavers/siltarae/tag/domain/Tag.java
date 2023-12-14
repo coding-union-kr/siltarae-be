@@ -23,7 +23,7 @@ public class Tag extends BaseEntity {
     private String name;
 
     @ManyToOne(cascade = CascadeType.DETACH, fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "member_id")
     private Member member;
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
