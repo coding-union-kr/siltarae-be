@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import weavers.siltarae.global.BaseEntity;
 import weavers.siltarae.tag.domain.Tag;
-import weavers.siltarae.user.domain.User;
+import weavers.siltarae.member.domain.Member;
 
 import java.util.List;
 
@@ -22,7 +22,7 @@ public class Mistake extends BaseEntity {
 
     @ManyToOne(cascade = CascadeType.DETACH, fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
-    private User user;
+    private Member member;
 
     @Column(nullable = false, length = 140)
     private String content;
@@ -34,9 +34,9 @@ public class Mistake extends BaseEntity {
     private List<Tag> tags;
 
     @Builder
-    public Mistake(Long id, User user, String content, List<Tag> tags) {
+    public Mistake(Long id, Member member, String content, List<Tag> tags) {
         this.id = id;
-        this.user = user;
+        this.member = member;
         this.content = content;
         this.tags = tags;
     }

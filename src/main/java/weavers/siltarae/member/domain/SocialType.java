@@ -1,4 +1,4 @@
-package weavers.siltarae.user.domain;
+package weavers.siltarae.member.domain;
 
 public enum SocialType {
 

@@ -1,12 +1,12 @@
-package weavers.siltarae.user;
+package weavers.siltarae.member;
 
-import weavers.siltarae.user.domain.SocialType;
-import weavers.siltarae.user.domain.User;
+import weavers.siltarae.member.domain.SocialType;
+import weavers.siltarae.member.domain.Member;
 
 public class UserTestFixture {
 
-    public static User USER_KIM() {
-        return User.builder()
+    public static Member USER_KIM() {
+        return Member.builder()
                 .id(1L)
                 .email("siltarae@nn.com")
                 .nickname("Kim")
