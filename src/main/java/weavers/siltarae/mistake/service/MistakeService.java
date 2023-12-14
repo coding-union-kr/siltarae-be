@@ -15,8 +15,8 @@ import weavers.siltarae.mistake.dto.response.MistakeListResponse;
 import weavers.siltarae.mistake.dto.response.MistakeResponse;
 import weavers.siltarae.tag.domain.Tag;
 import weavers.siltarae.tag.domain.repository.TagRepository;
-import weavers.siltarae.user.domain.User;
-import weavers.siltarae.user.domain.repository.UserRepository;
+import weavers.siltarae.member.domain.Member;
+import weavers.siltarae.member.domain.repository.MemberRepository;
 
 import java.util.List;
 import java.util.Objects;
@@ -25,7 +25,7 @@ import java.util.Objects;
 @RequiredArgsConstructor
 @Slf4j
 public class MistakeService {
-    private final UserRepository userRepository;
+    private final MemberRepository memberRepository;
     private final MistakeRepository mistakeRepository;
     private final TagRepository tagRepository;
 
@@ -33,7 +33,7 @@ public class MistakeService {
             MistakeCreateRequest request, Long memberId) {
         Mistake mistake = mistakeRepository.save(
                 Mistake.builder()
-                        .user(getTestUser(memberId))
+                        .member(getTestUser(memberId))
                         .content(request.getContent())
                         .tags(getTags(request.getTagIds(), memberId))
                         .build()
@@ -44,14 +44,14 @@ public class MistakeService {
 
     @Transactional(readOnly = true)
     public MistakeListResponse getMistakeList(Long memberId, Pageable pageable) {
-        Page<Mistake> mistakes = mistakeRepository.findByUserAndDeletedAtIsNullOrderByIdDesc(getTestUser(memberId), pageable);
+        Page<Mistake> mistakes = mistakeRepository.findByMemberAndDeletedAtIsNullOrderByIdDesc(getTestUser(memberId), pageable);
 
         return MistakeListResponse.from(mistakes);
     }
 
     @Transactional(readOnly = true)
     public MistakeResponse getMistake(Long memberId, Long mistakeId) {
-        Mistake mistake = mistakeRepository.findByIdAndUserAndDeletedAtIsNull(mistakeId, getTestUser(memberId))
+        Mistake mistake = mistakeRepository.findByIdAndMemberAndDeletedAtIsNull(mistakeId, getTestUser(memberId))
         .orElseThrow(() -> new BadRequestException(ExceptionCode.NOT_FOUND_MISTAKE)
         );
 
@@ -61,13 +61,13 @@ public class MistakeService {
     @Transactional
     public void deleteMistake(Long memberId, List<Long> mistakeIds) {
         List<Mistake> mistakes
-                = mistakeRepository.findByIdInAndUserAndDeletedAtIsNull(mistakeIds, getTestUser(memberId));
+                = mistakeRepository.findByIdInAndMemberAndDeletedAtIsNull(mistakeIds, getTestUser(memberId));
 
         mistakes.forEach(Mistake::delete);
     }
 
-    private User getTestUser(Long memberId) {
-        return userRepository.findById(memberId).orElseThrow(() -> new BadRequestException(ExceptionCode.INVALID_MISTAKE_CONTENT_NULL));
+    private Member getTestUser(Long memberId) {
+        return memberRepository.findById(memberId).orElseThrow(() -> new BadRequestException(ExceptionCode.INVALID_MISTAKE_CONTENT_NULL));
     }
 
     private List<Tag> getTags(List<Long> tagIds, Long memberId) {
@@ -85,7 +85,7 @@ public class MistakeService {
     }
 
     private static void validateTagByUser(List<Long> tagIds, Long memberId, List<Tag> tags) {
-        if (tags.stream().anyMatch(tag -> !Objects.equals(tag.getUser().getId(), memberId))) {
+        if (tags.stream().anyMatch(tag -> !Objects.equals(tag.getMember().getId(), memberId))) {
             throw new BadRequestException(ExceptionCode.INTERNAL_SEVER_ERROR);
         }
     }

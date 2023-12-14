@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import weavers.siltarae.tag.domain.repository.TagRepository;
-import weavers.siltarae.user.UserTestFixture;
+import weavers.siltarae.member.UserTestFixture;
 
 import java.time.LocalDateTime;
 
@@ -21,7 +21,7 @@ class TagTest {
         // given
         Tag createdTag = Tag.builder()
                 .name("tag")
-                .user(UserTestFixture.USER_KIM())
+                .member(UserTestFixture.USER_KIM())
                 .build();
 
         // when
