@@ -1,7 +1,6 @@
 package weavers.siltarae.login.domain;
 
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -47,7 +46,7 @@ public class JwtProvider {
                 .subject(subject)
                 .issuedAt(now)
                 .expiration(expirationDate)
-                .signWith(secretKey, SignatureAlgorithm.HS256)
+                .signWith(secretKey)
                 .compact();
     }
 
