@@ -8,16 +8,16 @@ import weavers.siltarae.login.domain.JwtProvider;
 import weavers.siltarae.login.domain.RefreshToken;
 import weavers.siltarae.login.domain.repository.RefreshTokenRepository;
 import weavers.siltarae.login.dto.response.TokenPair;
-import weavers.siltarae.login.dto.response.UserInfoResponse;
-import weavers.siltarae.user.domain.User;
-import weavers.siltarae.user.domain.repository.UserRepository;
+import weavers.siltarae.login.dto.response.MemberInfoResponse;
+import weavers.siltarae.member.domain.Member;
+import weavers.siltarae.member.domain.repository.MemberRepository;
 
 @Service
 @Transactional
 @RequiredArgsConstructor
 public class LoginService {
 
-    private final UserRepository userRepository;
+    private final MemberRepository memberRepository;
 
     private final RefreshTokenRepository refreshTokenRepository;
 
@@ -27,14 +27,14 @@ public class LoginService {
 
     public TokenPair login(String socialType, String code) {
         String authAccessToken = googleProvider.requestAccessToken(code);
-        UserInfoResponse userInfo = googleProvider.getUserInfo(authAccessToken);
+        MemberInfoResponse memberInfo = googleProvider.getMemberInfo(authAccessToken);
 
-        User user = userRepository.findByIdentifier(userInfo.getIdentifier())
-                .orElseGet(() -> createUser(userInfo));
+        Member member = memberRepository.findByIdentifier(memberInfo.getIdentifier())
+                .orElseGet(() -> createMember(memberInfo));
 
-        TokenPair tokenPair = jwtProvider.createTokenPair(user.getId());
+        TokenPair tokenPair = jwtProvider.createTokenPair(member.getId());
 
-        saveRefreshToken(tokenPair.getRefreshToken(), user.getId());
+        saveRefreshToken(tokenPair.getRefreshToken(), member.getId());
 
         return tokenPair;
     }
@@ -48,13 +48,13 @@ public class LoginService {
         refreshTokenRepository.save(createdRefreshToken);
     }
 
-    private User createUser(UserInfoResponse userInfo) {
-        User createdUser = User.builder()
-                .identifier(userInfo.getIdentifier())
-                .nickname(userInfo.getName())
-                .email(userInfo.getEmail())
-                .socialType(userInfo.getSocialType())
+    private Member createMember(MemberInfoResponse memberInfo) {
+        Member createdMember = Member.builder()
+                .identifier(memberInfo.getIdentifier())
+                .nickname(memberInfo.getName())
+                .email(memberInfo.getEmail())
+                .socialType(memberInfo.getSocialType())
                 .build();
-        return userRepository.save(createdUser);
+        return memberRepository.save(createdMember);
     }
 }

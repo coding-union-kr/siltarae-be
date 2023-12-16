@@ -16,7 +16,7 @@ public enum ExceptionCode {
 
     NOT_FOUND_TAG(3002, "해당하는 태그가 존재하지 않습니다."),
 
-    NOT_FOUND_USER(4001, "해당하는 유저가 존재하지 않습니다."),
+    NOT_FOUND_MEMBER(4001, "해당하는 회원이 존재하지 않습니다."),
 
     NOT_SUPPORTED_AUTH_SERVICE(5001, "지원하는 소셜 로그인 서비스가 아닙니다."),
     INVALIE_AUTHORIZATION_CODE(5002, "인증 코드가 유효하지 않습니다."),

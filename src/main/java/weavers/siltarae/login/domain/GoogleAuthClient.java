@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import weavers.siltarae.login.dto.request.OAuthAccessTokenRequest;
 import weavers.siltarae.login.dto.response.OAuthAccessTokenResponse;
-import weavers.siltarae.login.dto.response.UserInfoResponse;
+import weavers.siltarae.login.dto.response.MemberInfoResponse;
 
 import java.net.URI;
 
@@ -21,5 +21,5 @@ public interface GoogleAuthClient {
     ResponseEntity<OAuthAccessTokenResponse> getAccessToken(@RequestBody OAuthAccessTokenRequest request);
 
     @GetMapping("/oauth2/v1/userinfo")
-    ResponseEntity<UserInfoResponse> getUserInfo(URI baseUri, @RequestParam("access_token") String accessToken);
+    ResponseEntity<MemberInfoResponse> getMemberInfo(URI baseUri, @RequestParam("access_token") String accessToken);
 }

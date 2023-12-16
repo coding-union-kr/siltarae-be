@@ -7,8 +7,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import weavers.siltarae.login.dto.request.OAuthAccessTokenRequest;
 import weavers.siltarae.login.dto.response.OAuthAccessTokenResponse;
-import weavers.siltarae.login.dto.response.UserInfoResponse;
-import weavers.siltarae.user.domain.SocialType;
+import weavers.siltarae.login.dto.response.MemberInfoResponse;
+import weavers.siltarae.member.domain.SocialType;
 
 import java.net.URI;
 
@@ -33,19 +33,19 @@ public class GoogleProvider extends OAuthProvider {
     @Value("${oauth2.google.grant-type}")
     private String GRANT_TYPE;
 
-    @Value("${oauth2.google.userinfo-base-uri}")
-    private String USERINFO_BASE_URI;
+    @Value("${oauth2.google.memberinfo-base-uri}")
+    private String MEMBERINFO_BASE_URI;
 
     @Override
-    public UserInfoResponse getUserInfo(String accessToken) {
+    public MemberInfoResponse getMemberInfo(String accessToken) {
 
-        ResponseEntity<UserInfoResponse> response = googleAuthClient.getUserInfo(URI.create(USERINFO_BASE_URI), accessToken);
+        ResponseEntity<MemberInfoResponse> response = googleAuthClient.getMemberInfo(URI.create(MEMBERINFO_BASE_URI), accessToken);
 
-        UserInfoResponse userInfo = response.getBody();
-        userInfo.setSocialType(SocialType.GOOGLE);
+        MemberInfoResponse memberInfo = response.getBody();
+        memberInfo.setSocialType(SocialType.GOOGLE);
         // TODO 응답코드 체크
 
-        return userInfo;
+        return memberInfo;
     }
 
     @Override
@@ -63,7 +63,6 @@ public class GoogleProvider extends OAuthProvider {
         // TODO 응답코드 체크
 
         OAuthAccessTokenResponse accessTokenResponse = response.getBody();
-        log.info("accessToken = {}", accessTokenResponse.getAccessToken());
 
         return accessTokenResponse.getAccessToken();
     }

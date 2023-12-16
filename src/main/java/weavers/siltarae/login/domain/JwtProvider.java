@@ -28,8 +28,8 @@ public class JwtProvider {
         this.refreshTokenExpirationTime = refreshTokenExpirationTime;
     }
 
-    public TokenPair createTokenPair(Long userId) {
-        String accessToken = createAccessToken(userId.toString(), accessTokenExpirationTime);
+    public TokenPair createTokenPair(Long memberId) {
+        String accessToken = createAccessToken(memberId.toString(), accessTokenExpirationTime);
         String refreshToken = createRefreshToken();
 
         return TokenPair.builder()

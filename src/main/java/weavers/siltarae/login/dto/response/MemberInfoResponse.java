@@ -4,11 +4,11 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import weavers.siltarae.user.domain.SocialType;
+import weavers.siltarae.member.domain.SocialType;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class UserInfoResponse {
+public class MemberInfoResponse {
 
     private SocialType socialType;
 

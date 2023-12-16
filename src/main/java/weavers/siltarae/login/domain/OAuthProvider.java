@@ -1,6 +1,6 @@
 package weavers.siltarae.login.domain;
 
-import weavers.siltarae.login.dto.response.UserInfoResponse;
+import weavers.siltarae.login.dto.response.MemberInfoResponse;
 
 public abstract class OAuthProvider {
 
@@ -10,7 +10,7 @@ public abstract class OAuthProvider {
         return socialType.equals(SOCIAL_TYPE);
     }
 
-    abstract UserInfoResponse getUserInfo(String accessToken);
+    abstract MemberInfoResponse getMemberInfo(String accessToken);
 
     abstract String requestAccessToken(String code);
 
