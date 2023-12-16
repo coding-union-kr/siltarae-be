@@ -10,7 +10,7 @@ import weavers.siltarae.tag.domain.repository.TagRepository;
 import weavers.siltarae.tag.domain.Tag;
 import weavers.siltarae.tag.dto.request.TagCreateRequest;
 import weavers.siltarae.tag.dto.response.TagListResponse;
-import weavers.siltarae.user.domain.repository.UserRepository;
+import weavers.siltarae.member.domain.repository.MemberRepository;
 
 import java.util.List;
 import java.util.Optional;
@@ -20,7 +20,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.*;
 import static weavers.siltarae.tag.TagTestFixture.*;
-import static weavers.siltarae.user.UserTestFixture.USER_KIM;
+import static weavers.siltarae.member.UserTestFixture.USER_KIM;
 
 @ExtendWith(MockitoExtension.class)
 class TagServiceTest {
@@ -32,13 +32,13 @@ class TagServiceTest {
     private TagRepository tagRepository;
 
     @Mock
-    private UserRepository userRepository;
+    private MemberRepository memberRepository;
 
     @Test
     void 태그_생성_후_tagId를_반환한다() {
         // given
         final TagCreateRequest tagCreateRequest = new TagCreateRequest(COMPANY_TAG().getName());
-        given(userRepository.findById(2L))
+        given(memberRepository.findById(2L))
                 .willReturn(Optional.ofNullable(USER_KIM()));
         given(tagRepository.save(any(Tag.class)))
                 .willReturn(COMPANY_TAG());
@@ -54,9 +54,9 @@ class TagServiceTest {
     void 태그명_중복_시_예외가_발생한다() {
         // given
         TagCreateRequest request = new TagCreateRequest("회사");
-        given(userRepository.findById(anyLong()))
+        given(memberRepository.findById(anyLong()))
                 .willReturn(Optional.ofNullable(USER_KIM()));
-        given(tagRepository.existsByUser_IdAndName(1L, "회사"))
+        given(tagRepository.existsByMember_IdAndName(1L, "회사"))
                 .willReturn(true);
 
         // when
@@ -70,7 +70,7 @@ class TagServiceTest {
     @Test
     void 사용자의_태그_목록을_조회할_수_있다() {
         // given
-        given(tagRepository.findAllByUser_IdAndDeletedAtIsNotNull(1L))
+        given(tagRepository.findAllByMember_IdAndDeletedAtIsNotNull(1L))
                 .willReturn(List.of(COMPANY_TAG(), DAILY_TAG()));
 
         // when
