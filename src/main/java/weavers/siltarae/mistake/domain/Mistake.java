@@ -9,7 +9,6 @@ import weavers.siltarae.like.domain.Likes;
 import weavers.siltarae.member.domain.Member;
 import weavers.siltarae.tag.domain.Tag;
 
-import java.util.Collections;
 import java.util.List;
 
 import static lombok.AccessLevel.PROTECTED;
@@ -17,7 +16,6 @@ import static lombok.AccessLevel.PROTECTED;
 @Entity
 @Getter
 @NoArgsConstructor(access = PROTECTED)
-@Builder
 public class Mistake extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,13 +32,12 @@ public class Mistake extends BaseEntity {
     @JoinTable(name = "tag_mistake",
             joinColumns = @JoinColumn(name = "mistake_id"),
             inverseJoinColumns = @JoinColumn(name = "tag_id"))
-    @Builder.Default
-    private List<Tag> tags = Collections.emptyList();;
+    private List<Tag> tags;
 
     @OneToMany(mappedBy = "mistake", cascade = CascadeType.DETACH)
-    @Builder.Default
-    private List<Likes> likes = Collections.emptyList();
+    private List<Likes> likes;
 
+    @Builder
     public Mistake(Long id, Member member, String content, List<Tag> tags, List<Likes> likes) {
         this.id = id;
         this.member = member;
