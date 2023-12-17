@@ -9,8 +9,9 @@ import weavers.siltarae.member.domain.Member;
 import java.util.List;
 import java.util.Optional;
 
-public interface MistakeRepository extends JpaRepository<Mistake, Long> {
+public interface MistakeRepository extends JpaRepository<Mistake, Long>, MistakeQRepository {
     Page<Mistake> findByMemberAndDeletedAtIsNullOrderByIdDesc(Member member, Pageable pageable);
     Optional<Mistake> findByIdAndMemberAndDeletedAtIsNull(Long id, Member member);
     List<Mistake> findByIdInAndMemberAndDeletedAtIsNull(List<Long> id, Member member);
+    Page<Mistake> findByDeletedAtIsNullOrderByIdDesc(Pageable pageable);
 }
