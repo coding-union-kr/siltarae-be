@@ -20,14 +20,18 @@ public class MistakeResponse {
     private List<TagResponse> tags;
     private Integer commentCount;
     private Integer likeCount;
+    private Long memberId;
+    private String memberName;
 
     @Builder
-    public MistakeResponse(Long id, String content, List<TagResponse> tags, Integer commentCount, Integer likeCount) {
+    public MistakeResponse(Long id, String content, List<TagResponse> tags, Integer commentCount, Integer likeCount, Long memberId, String memberName) {
         this.id = id;
         this.content = content;
         this.tags = tags;
         this.commentCount = commentCount;
         this.likeCount = likeCount;
+        this.memberId = memberId;
+        this.memberName = memberName;
     }
 
     private static final Integer TEST_COMMENT_COUNT = 13;
@@ -44,6 +48,22 @@ public class MistakeResponse {
                 .commentCount(TEST_COMMENT_COUNT)
                 .likeCount(TEST_LIKE_COUNT)
                 .tags(tag)
+                .build();
+    }
+
+    public static MistakeResponse peedFrom(Mistake mistake) {
+        List<TagResponse> tag = mistake.getTags().stream().map(
+                TagResponse::from
+        ).collect(Collectors.toList());
+
+        return MistakeResponse.builder()
+                .id(mistake.getId())
+                .content(mistake.getContent())
+                .commentCount(TEST_COMMENT_COUNT)
+                .likeCount(mistake.getLikes().size())
+                .tags(tag)
+                .memberId(mistake.getMember().getId())
+                .memberName(mistake.getMember().getNickname())
                 .build();
     }
 }

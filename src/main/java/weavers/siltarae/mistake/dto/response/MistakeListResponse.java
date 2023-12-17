@@ -33,4 +33,15 @@ public class MistakeListResponse {
                 .mistakes(mistakeResponses)
                 .build();
     }
+
+    public static MistakeListResponse peedFrom (List<Mistake> mistakes, Long totalCount) {
+        List<MistakeResponse> mistakeResponses = mistakes.stream().map(
+                MistakeResponse::peedFrom
+        ).collect(Collectors.toList());
+
+        return MistakeListResponse.builder()
+                .totalCount(totalCount)
+                .mistakes(mistakeResponses)
+                .build();
+    }
 }
