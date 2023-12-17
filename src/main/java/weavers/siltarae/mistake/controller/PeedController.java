@@ -15,7 +15,7 @@ import weavers.siltarae.mistake.service.PeedService;
 @Tag(name = "[피드] 피드 Controller")
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/v1/api/peed")
+@RequestMapping("/api/v1/peed")
 public class PeedController {
     private final PeedService peedService;
 
