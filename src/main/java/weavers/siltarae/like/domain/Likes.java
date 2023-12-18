@@ -5,19 +5,15 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.CreatedDate;
-import weavers.siltarae.global.CreatedAt;
+import weavers.siltarae.global.CreateTimeEntity;
 import weavers.siltarae.member.domain.Member;
 import weavers.siltarae.mistake.domain.Mistake;
-
-import java.time.LocalDateTime;
-import java.util.Collections;
 
 @Entity
 @IdClass(LikeId.class)
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Likes extends CreatedAt {
+public class Likes extends CreateTimeEntity {
     @Id
     @ManyToOne(optional = false, cascade = CascadeType.DETACH, fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", nullable = false)
