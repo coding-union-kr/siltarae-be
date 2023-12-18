@@ -48,12 +48,12 @@ public class TokenProvider {
                 .build();
     }
 
-    private String createAccessToken(final String subject, final Long expirationTime) {
+    private String createAccessToken(final String memberId, final Long expirationTime) {
         final Date now = new Date();
         final Date expirationDate = new Date(now.getTime()+expirationTime);
 
         return Jwts.builder()
-                .subject(subject)
+                .subject(memberId)
                 .issuedAt(now)
                 .expiration(expirationDate)
                 .signWith(secretKey)
