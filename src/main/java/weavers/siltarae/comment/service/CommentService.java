@@ -18,6 +18,7 @@ import weavers.siltarae.mistake.domain.repository.MistakeRepository;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class CommentService {
     private final CommentRepository commentRepository;
     private final MistakeRepository mistakeRepository;
@@ -43,13 +44,13 @@ public class CommentService {
 
     @Transactional
     public void delete(Long commentId, Long memberId) {
-        Comment comment = findComment(commentId, getTestUser(memberId));
+        Comment comment = findMyComment(commentId, getTestUser(memberId));
 
         comment.delete();
     }
 
-    private Comment findComment(Long commentId, Member member) {
-        return commentRepository.findByIdAndMemberAndDeletedAtIsNull(commentId, member).orElseThrow(() -> new BadRequestException(ExceptionCode.INTERNAL_SEVER_ERROR));
+    private Comment findMyComment(Long commentId, Member member) {
+        return commentRepository.findByIdAndMemberAndDeletedAtIsNull(commentId, member).orElseThrow(() -> new BadRequestException(ExceptionCode.COMMENT_VALID_ERROR));
     }
 
     private Mistake getMistake(Long mistakeId) {
@@ -57,6 +58,6 @@ public class CommentService {
     }
 
     private Member getTestUser(Long memberId) {
-        return memberRepository.findById(memberId).orElseThrow(() -> new BadRequestException(ExceptionCode.INVALID_MISTAKE_CONTENT_NULL));
+        return memberRepository.findById(memberId).orElseThrow(() -> new BadRequestException(ExceptionCode.NOT_FOUND_USER));
     }
 }
