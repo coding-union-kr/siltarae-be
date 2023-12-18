@@ -25,7 +25,7 @@ public class Comment extends BaseEntity {
     @Column(nullable = false, length = 140)
     private String content;
 
-    @ManyToOne(cascade = CascadeType.DETACH, fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "mistake_id")
     private Mistake mistake;
 
