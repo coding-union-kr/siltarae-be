@@ -13,4 +13,5 @@ public interface MistakeRepository extends JpaRepository<Mistake, Long> {
     Page<Mistake> findByMemberAndDeletedAtIsNullOrderByIdDesc(Member member, Pageable pageable);
     Optional<Mistake> findByIdAndMemberAndDeletedAtIsNull(Long id, Member member);
     List<Mistake> findByIdInAndMemberAndDeletedAtIsNull(List<Long> id, Member member);
+    Optional<Mistake> findByIdAndDeletedAtIsNull(Long id);
 }
