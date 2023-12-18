@@ -2,6 +2,7 @@ package weavers.siltarae.login.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,7 +20,7 @@ public class LoginController {
 
     private final LoginService loginService;
 
-    @GetMapping("/login/{socialType}")
+    @PostMapping("/login/{socialType}")
     public ResponseEntity<AccessTokenResponse> login(@PathVariable final String socialType,
                                                      @RequestParam final String code) {
 
@@ -37,8 +38,19 @@ public class LoginController {
                 .accessToken(tokenPair.getAccessToken())
                 .build();
 
-        return ResponseEntity.ok()
+        return ResponseEntity.status(HttpStatus.CREATED)
                 .header(SET_COOKIE, cookie.toString())
+                .body(accessTokenResponse);
+    }
+
+    @PostMapping("/token")
+    public ResponseEntity<AccessTokenResponse> extendLogin(
+            @RequestHeader("Authorization") final String authorizationHeader,
+            @CookieValue("refresh-token") final String refreshToken) {
+
+        AccessTokenResponse accessTokenResponse = loginService.renewAccessToken(authorizationHeader, refreshToken);
+
+        return ResponseEntity.status(HttpStatus.CREATED)
                 .body(accessTokenResponse);
     }
 }

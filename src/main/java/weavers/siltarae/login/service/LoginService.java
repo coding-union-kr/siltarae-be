@@ -3,10 +3,12 @@ package weavers.siltarae.login.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import weavers.siltarae.global.exception.AuthException;
+import weavers.siltarae.global.exception.BadRequestException;
+import weavers.siltarae.global.exception.ExceptionCode;
 import weavers.siltarae.login.domain.GoogleProvider;
-import weavers.siltarae.login.domain.JwtProvider;
-import weavers.siltarae.login.domain.RefreshToken;
-import weavers.siltarae.login.domain.repository.RefreshTokenRepository;
+import weavers.siltarae.login.domain.TokenProvider;
+import weavers.siltarae.login.dto.response.AccessTokenResponse;
 import weavers.siltarae.login.dto.response.TokenPair;
 import weavers.siltarae.login.dto.response.MemberInfoResponse;
 import weavers.siltarae.member.domain.Member;
@@ -18,12 +20,10 @@ import weavers.siltarae.member.domain.repository.MemberRepository;
 public class LoginService {
 
     private final MemberRepository memberRepository;
-
-    private final RefreshTokenRepository refreshTokenRepository;
-
-    private final JwtProvider jwtProvider;
-
+    private final TokenProvider tokenProvider;
     private final GoogleProvider googleProvider;
+
+    private final String BEARER_TYPE = "Bearer";
 
     public TokenPair login(String socialType, String code) {
         String authAccessToken = googleProvider.requestAccessToken(code);
@@ -32,21 +32,31 @@ public class LoginService {
         Member member = memberRepository.findByIdentifier(memberInfo.getIdentifier())
                 .orElseGet(() -> createMember(memberInfo));
 
-        TokenPair tokenPair = jwtProvider.createTokenPair(member.getId());
-
-        saveRefreshToken(tokenPair.getRefreshToken(), member.getId());
-
-        return tokenPair;
+        return tokenProvider.createTokenPair(member.getId());
     }
 
-    public void saveRefreshToken(String refreshToken, Long memberId) {
-        RefreshToken createdRefreshToken = RefreshToken.builder()
-                .refreshToken(refreshToken)
-                .memberId(memberId)
+    public AccessTokenResponse renewAccessToken(String authorizationHeader, String refreshToken) {
+        final String accessToken = getAccessTokenFromHeader(authorizationHeader);
+
+        if(!tokenProvider.isExpiredAccessAndValidRefresh(accessToken, refreshToken)) {
+            throw new AuthException(ExceptionCode.FAIL_TO_VALIDATE_TOKEN);
+        }
+
+        Long memberId = tokenProvider.getMemberIdFromAccessToken(accessToken);
+        String newAccessToken = tokenProvider.renewAccessToken(memberId);
+
+        return AccessTokenResponse.builder()
+                .accessToken(newAccessToken)
                 .build();
-
-        refreshTokenRepository.save(createdRefreshToken);
     }
+
+    private String getAccessTokenFromHeader(String authorizationHeader) {
+        if(authorizationHeader==null || !authorizationHeader.startsWith(BEARER_TYPE)) {
+            throw new BadRequestException(ExceptionCode.INVALID_REQUEST);
+        }
+        return authorizationHeader.substring(BEARER_TYPE.length());
+    }
+
 
     private Member createMember(MemberInfoResponse memberInfo) {
         Member createdMember = Member.builder()
