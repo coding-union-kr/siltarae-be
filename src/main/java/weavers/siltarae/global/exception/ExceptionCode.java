@@ -18,6 +18,8 @@ public enum ExceptionCode {
 
     NOT_FOUND_USER(4001, "해당하는 유저가 존재하지 않습니다."),
 
+    NOT_FOUND_COMMENT(7001, "해당하는 댓글이 존재하지 않습니다."),
+
     INTERNAL_SEVER_ERROR(9999, "서버 에러가 발생하였습니다. 관리자에게 문의해 주세요.");
 
     private final int code;
