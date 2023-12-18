@@ -1,6 +1,5 @@
 package weavers.siltarae.mistake.dto.request;
 
-import io.swagger.v3.oas.annotations.Parameter;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,18 +10,18 @@ import static lombok.AccessLevel.PROTECTED;
 
 @Getter
 @NoArgsConstructor(access = PROTECTED)
-public class PeedRequest {
+public class FeedRequest {
     @NotNull(message = "페이지 번호는 필수 입니다.")
     private Integer page;
     @NotNull(message = "페이지 개수는 필수 입니다.")
     private Integer size;
     @NotNull(message = "피드 타입은 필수 입니다.")
-    private PeedType peedType;
+    private FeedType feedType;
 
-    public PeedRequest(Integer page, Integer size, PeedType peedType) {
+    public FeedRequest(Integer page, Integer size, FeedType feedType) {
         this.page = page;
         this.size = size;
-        this.peedType = peedType;
+        this.feedType = feedType;
     }
 
     public Pageable toPageable() {

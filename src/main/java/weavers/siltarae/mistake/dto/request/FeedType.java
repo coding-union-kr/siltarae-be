@@ -1,8 +1,8 @@
 package weavers.siltarae.mistake.dto.request;
 
-public enum PeedType {
+public enum FeedType {
     POPULAR("인기순"), FASTEST("최신순");
 
-    PeedType(String value) {
+    FeedType(String value) {
     }
 }

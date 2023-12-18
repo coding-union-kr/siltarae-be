@@ -6,18 +6,17 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import weavers.siltarae.mistake.domain.Mistake;
 import weavers.siltarae.mistake.domain.repository.MistakeRepository;
-import weavers.siltarae.mistake.dto.request.PeedRequest;
+import weavers.siltarae.mistake.dto.request.FeedRequest;
 import weavers.siltarae.mistake.dto.response.FeedListResponse;
-import weavers.siltarae.mistake.dto.response.MistakeListResponse;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class PeedService {
+public class FeedService {
     private final MistakeRepository mistakeRepository;
 
-    public FeedListResponse getPeedList(PeedRequest request) {
-        Page<Mistake> mistakes = switch (request.getPeedType()) {
+    public FeedListResponse getfeedList(FeedRequest request) {
+        Page<Mistake> mistakes = switch (request.getFeedType()) {
             case FASTEST -> mistakeRepository.findByDeletedAtIsNullOrderByIdDesc(request.toPageable());
             case POPULAR -> mistakeRepository.findMistakesSortedByLikes(request.toPageable());
         };
