@@ -51,19 +51,4 @@ public class MistakeResponse {
                 .build();
     }
 
-    public static MistakeResponse peedFrom(Mistake mistake) {
-        List<TagResponse> tags = mistake.getTags().stream().map(
-                TagResponse::from
-        ).collect(Collectors.toList());
-
-        return MistakeResponse.builder()
-                .id(mistake.getId())
-                .content(mistake.getContent())
-                .commentCount(TEST_COMMENT_COUNT)
-                .likeCount(mistake.getLikes().size())
-                .tags(tag)
-                .memberId(mistake.getMember().getId())
-                .memberName(mistake.getMember().getNickname())
-                .build();
-    }
 }
