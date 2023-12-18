@@ -12,7 +12,7 @@ import weavers.siltarae.like.service.LikeService;
 @Tag(name = "[좋아요] 좋아요 Controller")
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/v1/api/like")
+@RequestMapping("/api/v1/like")
 public class LikeController {
 
     private static final Long TEST_USER_ID = 1L;
