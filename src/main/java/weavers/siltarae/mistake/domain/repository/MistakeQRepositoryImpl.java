@@ -24,6 +24,7 @@ public class MistakeQRepositoryImpl implements MistakeQRepository {
     public Page<Mistake> findMistakesSortedByLikes(Pageable pageable) {
         List<Mistake> results = queryFactory.selectFrom(mistake)
                 .leftJoin(mistake.likes, likes)
+                .where(mistake.deletedAt.isNull())
                 .groupBy(mistake)
                 .orderBy(likes.count().desc())
                 .offset(pageable.getOffset())
