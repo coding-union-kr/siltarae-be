@@ -17,7 +17,7 @@ import java.util.List;
 @Tag(name = "[실수] 실수 Controller")
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/v1/api/mistakes")
+@RequestMapping("/api/v1/mistakes")
 public class MistakeController {
     private final MistakeService mistakeService;
 
