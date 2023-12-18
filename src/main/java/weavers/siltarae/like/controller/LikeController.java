@@ -14,6 +14,7 @@ public class LikeController {
 
     private static final Long TEST_USER_ID = 1L;
     private final LikeService likeService;
+
     @PostMapping
     public ResponseEntity<Void> addLike(
             @RequestParam("mistakeId") Long mistakeId) {
