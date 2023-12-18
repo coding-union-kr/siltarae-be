@@ -81,20 +81,12 @@ public class TokenProvider {
         try {
             Long memberId = getMemberIdFromAccessToken(accessToken);
             validateRefreshToken(refreshToken, memberId);
-        } catch (RefreshTokenException | BadRequestException e) {
-            return false;
-        }
-        return true;
-    }
-
-    public boolean isValidTokens(final String accessToken, final String refreshToken) {
-        try {
-            Long memberId = getMemberIdFromAccessToken(accessToken);
-            validateRefreshToken(refreshToken, memberId);
+        } catch (AccessTokenException e) {
+            return true;
         } catch (Exception e) {
             return false;
         }
-        return true;
+        return false;
     }
 
     private void validateRefreshToken(final String token, final Long memberId) {
