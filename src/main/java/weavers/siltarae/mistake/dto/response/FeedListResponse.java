@@ -13,24 +13,24 @@ import static lombok.AccessLevel.PROTECTED;
 
 @Getter
 @NoArgsConstructor(access = PROTECTED)
-public class MistakeListResponse {
+public class FeedListResponse {
     private Long totalCount;
-    private List<MistakeResponse> mistakes;
+    private List<FeedResponse> feeds;
 
     @Builder
-    public MistakeListResponse(Long totalCount, List<MistakeResponse> mistakes) {
+    public FeedListResponse(Long totalCount, List<FeedResponse> feeds) {
         this.totalCount = totalCount;
-        this.mistakes = mistakes;
+        this.feeds = feeds;
     }
 
-    public static MistakeListResponse from (Page<Mistake> mistakes) {
-        List<MistakeResponse> mistakeResponses = mistakes.getContent().stream().map(
-                MistakeResponse::from
-        ).collect(Collectors.toList());
+    public static FeedListResponse from (Page<Mistake> mistakes) {
+        List<FeedResponse> feedResponses = mistakes.stream().map(
+                FeedResponse::from
+        ).toList();
 
-        return MistakeListResponse.builder()
+        return FeedListResponse.builder()
                 .totalCount(mistakes.getTotalElements())
-                .mistakes(mistakeResponses)
+                .feeds(feedResponses)
                 .build();
     }
 }

@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import weavers.siltarae.mistake.dto.request.PeedRequest;
-import weavers.siltarae.mistake.dto.response.MistakeListResponse;
+import weavers.siltarae.mistake.dto.response.FeedListResponse;
 import weavers.siltarae.mistake.service.PeedService;
 
 @Tag(name = "[피드] 피드 Controller")
@@ -21,7 +21,7 @@ public class PeedController {
 
     @GetMapping
     @Operation(summary = "피드 조회")
-    public ResponseEntity<MistakeListResponse> getPeeds(
+    public ResponseEntity<FeedListResponse> getPeeds(
             @Valid PeedRequest request) {
 
         return ResponseEntity.ok(peedService.getPeedList(request));
