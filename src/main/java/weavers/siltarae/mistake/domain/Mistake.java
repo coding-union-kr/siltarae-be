@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import weavers.siltarae.comment.domain.Comment;
 import weavers.siltarae.global.BaseEntity;
 import weavers.siltarae.like.domain.Likes;
 import weavers.siltarae.member.domain.Member;
@@ -33,6 +34,9 @@ public class Mistake extends BaseEntity {
             joinColumns = @JoinColumn(name = "mistake_id"),
             inverseJoinColumns = @JoinColumn(name = "tag_id"))
     private List<Tag> tags;
+
+    @OneToMany(mappedBy = "mistake", cascade = CascadeType.DETACH)
+    private List<Comment> comments;
 
     @OneToMany(mappedBy = "mistake", cascade = CascadeType.DETACH)
     private List<Likes> likes;
