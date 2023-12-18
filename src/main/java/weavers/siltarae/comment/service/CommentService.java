@@ -42,7 +42,6 @@ public class CommentService {
         );
     }
 
-    @Transactional
     public void delete(Long commentId, Long memberId) {
         Comment comment = findMyComment(commentId, getTestUser(memberId));
 
