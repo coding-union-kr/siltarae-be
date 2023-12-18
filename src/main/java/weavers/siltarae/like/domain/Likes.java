@@ -15,12 +15,12 @@ import weavers.siltarae.mistake.domain.Mistake;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Likes extends CreateTimeEntity {
     @Id
-    @ManyToOne(optional = false, cascade = CascadeType.DETACH, fetch = FetchType.LAZY)
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", nullable = false)
     private Member member;
 
     @Id
-    @ManyToOne(optional = false, cascade = CascadeType.DETACH, fetch = FetchType.LAZY)
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "mistake_id", nullable = false)
     private Mistake mistake;
 
