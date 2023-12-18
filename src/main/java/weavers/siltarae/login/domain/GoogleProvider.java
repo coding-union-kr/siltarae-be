@@ -43,7 +43,7 @@ public class GoogleProvider extends OAuthProvider {
 
         ResponseEntity<MemberInfoResponse> response = googleAuthClient.getMemberInfo(URI.create(MEMBER_INFO_BASE_URI), accessToken);
 
-        if (!response.getStatusCode().is2xxSuccessful()) {
+        if (!response.getStatusCode().is2xxSuccessful() || !response.hasBody()) {
             throw new AuthException(ExceptionCode.NOT_SUPPORTED_AUTH_SERVICE);
         }
 
@@ -65,7 +65,7 @@ public class GoogleProvider extends OAuthProvider {
 
         ResponseEntity<OAuthAccessTokenResponse> response = googleAuthClient.getAccessToken(request);
 
-        if(!response.getStatusCode().is2xxSuccessful()) {
+        if(!response.getStatusCode().is2xxSuccessful() || !response.hasBody()) {
             throw new AuthException(ExceptionCode.INVALID_AUTHORIZATION_CODE);
         }
 
