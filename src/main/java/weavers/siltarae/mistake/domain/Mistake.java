@@ -6,8 +6,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import weavers.siltarae.comment.domain.Comment;
 import weavers.siltarae.global.BaseEntity;
-import weavers.siltarae.tag.domain.Tag;
+import weavers.siltarae.like.domain.Likes;
 import weavers.siltarae.member.domain.Member;
+import weavers.siltarae.tag.domain.Tag;
 
 import java.util.List;
 
@@ -37,12 +38,16 @@ public class Mistake extends BaseEntity {
     @OneToMany(mappedBy = "mistake", cascade = CascadeType.DETACH)
     private List<Comment> comments;
 
+    @OneToMany(mappedBy = "mistake", cascade = CascadeType.DETACH)
+    private List<Likes> likes;
+
     @Builder
-    public Mistake(Long id, Member member, String content, List<Tag> tags) {
+    public Mistake(Long id, Member member, String content, List<Tag> tags, List<Likes> likes) {
         this.id = id;
         this.member = member;
         this.content = content;
         this.tags = tags;
+        this.likes = likes;
     }
 
 }
