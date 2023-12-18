@@ -2,6 +2,7 @@ package weavers.siltarae.like.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import weavers.siltarae.global.exception.BadRequestException;
 import weavers.siltarae.global.exception.ExceptionCode;
 import weavers.siltarae.like.domain.Likes;
@@ -15,6 +16,7 @@ import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class LikeService {
 
     private final MemberRepository memberRepository;
@@ -26,10 +28,10 @@ public class LikeService {
         Member member = getTestUser(memberId);
         Mistake mistake = getMistake(mistakeId);
 
-        checkLike(member, mistake);
+        toggleLike(member, mistake);
     }
 
-    private void checkLike(Member member, Mistake mistake) {
+    private void toggleLike(Member member, Mistake mistake) {
         likeRepository.findByMemberAndMistake(member, mistake)
                 .ifPresentOrElse(
                         this::deleteLike,                   // Like 가 존재한다면 deleteLike
