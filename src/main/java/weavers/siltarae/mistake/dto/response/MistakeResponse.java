@@ -52,7 +52,7 @@ public class MistakeResponse {
     }
 
     public static MistakeResponse peedFrom(Mistake mistake) {
-        List<TagResponse> tag = mistake.getTags().stream().map(
+        List<TagResponse> tags = mistake.getTags().stream().map(
                 TagResponse::from
         ).collect(Collectors.toList());
 
