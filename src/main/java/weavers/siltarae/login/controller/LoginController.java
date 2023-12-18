@@ -20,7 +20,7 @@ public class LoginController {
 
     private final LoginService loginService;
 
-    @PostMapping("/login/{socialType}")
+    @GetMapping("/login/{socialType}")
     public ResponseEntity<AccessTokenResponse> login(@PathVariable final String socialType,
                                                      @RequestParam final String code) {
 
