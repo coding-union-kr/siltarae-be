@@ -54,7 +54,7 @@ public class LoginService {
         if(authorizationHeader==null || !authorizationHeader.startsWith(BEARER_TYPE)) {
             throw new BadRequestException(ExceptionCode.INVALID_REQUEST);
         }
-        return authorizationHeader.substring(BEARER_TYPE.length());
+        return authorizationHeader.substring(BEARER_TYPE.length()).trim();
     }
 
 
