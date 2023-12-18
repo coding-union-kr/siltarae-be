@@ -5,6 +5,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
+import weavers.siltarae.global.exception.AuthException;
+import weavers.siltarae.global.exception.ExceptionCode;
 import weavers.siltarae.login.dto.request.OAuthAccessTokenRequest;
 import weavers.siltarae.login.dto.response.OAuthAccessTokenResponse;
 import weavers.siltarae.login.dto.response.MemberInfoResponse;
@@ -33,17 +35,20 @@ public class GoogleProvider extends OAuthProvider {
     @Value("${oauth2.google.grant-type}")
     private String GRANT_TYPE;
 
-    @Value("${oauth2.google.memberinfo-base-uri}")
-    private String MEMBERINFO_BASE_URI;
+    @Value("${oauth2.google.member-info-base-uri}")
+    private String MEMBER_INFO_BASE_URI;
 
     @Override
     public MemberInfoResponse getMemberInfo(String accessToken) {
 
-        ResponseEntity<MemberInfoResponse> response = googleAuthClient.getMemberInfo(URI.create(MEMBERINFO_BASE_URI), accessToken);
+        ResponseEntity<MemberInfoResponse> response = googleAuthClient.getMemberInfo(URI.create(MEMBER_INFO_BASE_URI), accessToken);
+
+        if (!response.getStatusCode().is2xxSuccessful()) {
+            throw new AuthException(ExceptionCode.NOT_SUPPORTED_AUTH_SERVICE);
+        }
 
         MemberInfoResponse memberInfo = response.getBody();
         memberInfo.setSocialType(SocialType.GOOGLE);
-        // TODO 응답코드 체크
 
         return memberInfo;
     }
@@ -60,10 +65,10 @@ public class GoogleProvider extends OAuthProvider {
 
         ResponseEntity<OAuthAccessTokenResponse> response = googleAuthClient.getAccessToken(request);
 
-        // TODO 응답코드 체크
+        if(!response.getStatusCode().is2xxSuccessful()) {
+            throw new AuthException(ExceptionCode.INVALID_AUTHORIZATION_CODE);
+        }
 
-        OAuthAccessTokenResponse accessTokenResponse = response.getBody();
-
-        return accessTokenResponse.getAccessToken();
+        return response.getBody().getAccessToken();
     }
 }
