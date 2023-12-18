@@ -1,8 +1,6 @@
 package weavers.siltarae.like.domain;
 
-import java.io.Serializable;
-
-public class LikeId implements Serializable{
+public class LikeId {
     private Long member;
     private Long mistake;
 }
