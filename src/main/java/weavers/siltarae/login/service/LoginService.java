@@ -67,4 +67,8 @@ public class LoginService {
                 .build();
         return memberRepository.save(createdMember);
     }
+
+    public void logout(String refreshToken) {
+        tokenProvider.deleteRefreshToken(refreshToken);
+    }
 }
