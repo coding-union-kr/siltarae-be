@@ -39,6 +39,7 @@ public class LoginService {
         final String accessToken = getAccessTokenFromHeader(authorizationHeader);
 
         if(!tokenProvider.isExpiredAccessAndValidRefresh(accessToken, refreshToken)) {
+            logout(refreshToken);
             throw new AuthException(ExceptionCode.FAIL_TO_VALIDATE_TOKEN);
         }
 
