@@ -56,6 +56,6 @@ public class LikeService {
     }
 
     private Member getTestUser(Long memberId) {
-        return memberRepository.findById(memberId).orElseThrow(() -> new BadRequestException(ExceptionCode.NOT_FOUND_USER));
+        return memberRepository.findById(memberId).orElseThrow(() -> new BadRequestException(ExceptionCode.NOT_FOUND_MEMBER));
     }
 }
