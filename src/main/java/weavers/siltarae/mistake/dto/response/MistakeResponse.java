@@ -34,9 +34,6 @@ public class MistakeResponse {
         this.memberName = memberName;
     }
 
-    private static final Integer TEST_COMMENT_COUNT = 13;
-    private static final Integer TEST_LIKE_COUNT = 11;
-
     public static MistakeResponse from(Mistake mistake) {
         List<TagResponse> tag = mistake.getTags().stream().map(
                 TagResponse::from
@@ -45,8 +42,8 @@ public class MistakeResponse {
         return MistakeResponse.builder()
                 .id(mistake.getId())
                 .content(mistake.getContent())
-                .commentCount(TEST_COMMENT_COUNT)
-                .likeCount(TEST_LIKE_COUNT)
+                .commentCount(mistake.getComments().size())
+                .likeCount(mistake.getLikes().size())
                 .tags(tag)
                 .build();
     }
