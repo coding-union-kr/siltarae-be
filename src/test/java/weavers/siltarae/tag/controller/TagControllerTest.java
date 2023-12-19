@@ -77,7 +77,7 @@ class TagControllerTest {
 
         // then
         resultActions.andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.message").value("태그명에는 한글, 영어, 숫자, _만 사용 가능합니다."));
+                .andExpect(jsonPath("$.message").value("태그명에는 한글, 영어, 숫자, 연속 1개 이하의 _만 사용 가능합니다."));
     }
 
     @Test
