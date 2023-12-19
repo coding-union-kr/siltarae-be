@@ -26,6 +26,7 @@ public class TagTestFixture {
         Tag deletedTag = Tag.builder()
                             .id(1L)
                             .name("모의고사")
+                            .mistakes(List.of())
                             .build();
 
         deletedTag.delete();
