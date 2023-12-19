@@ -93,8 +93,9 @@ public class TokenProvider {
         RefreshToken refreshToken = refreshTokenRepository.findById(token)
                 .orElseThrow(() -> new RefreshTokenException(ExceptionCode.EXPIRED_REFRESH_TOKEN));
 
-        if(token.equals(refreshToken.getRefreshToken())) return;
-        throw new BadRequestException(ExceptionCode.INVALID_REFRESH_TOKEN);
+        if(!token.equals(refreshToken.getRefreshToken())) {
+            throw new BadRequestException(ExceptionCode.INVALID_REFRESH_TOKEN);
+        }
     }
 
     public Long getMemberIdFromAccessToken(final String accessToken) {
