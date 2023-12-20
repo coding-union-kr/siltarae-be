@@ -4,10 +4,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import weavers.siltarae.mistake.domain.Mistake;
-import weavers.siltarae.tag.dto.response.TagResponse;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 import static lombok.AccessLevel.PROTECTED;
 
@@ -31,15 +27,14 @@ public class FeedResponse {
         this.memberName = memberName;
     }
 
-    private static final Integer TEST_COMMENT_COUNT = 13;
-    private static final Integer TEST_LIKE_COUNT = 11;
-
     public static FeedResponse from(Mistake mistake) {
         return FeedResponse.builder()
                 .id(mistake.getId())
                 .content(mistake.getContent())
-                .commentCount(TEST_COMMENT_COUNT)
-                .likeCount(TEST_LIKE_COUNT)
+                .commentCount(mistake.getComments().size())
+                .likeCount(mistake.getLikes().size())
+                .memberId(mistake.getMember().getId())
+                .memberName(mistake.getMember().getNickname())
                 .build();
     }
 

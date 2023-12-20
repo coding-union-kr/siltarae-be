@@ -11,7 +11,6 @@ import java.util.stream.Collectors;
 
 import static lombok.AccessLevel.PROTECTED;
 
-
 @Getter
 @NoArgsConstructor(access = PROTECTED)
 public class MistakeResponse {
@@ -20,22 +19,15 @@ public class MistakeResponse {
     private List<TagResponse> tags;
     private Integer commentCount;
     private Integer likeCount;
-    private Long memberId;
-    private String memberName;
 
     @Builder
-    public MistakeResponse(Long id, String content, List<TagResponse> tags, Integer commentCount, Integer likeCount, Long memberId, String memberName) {
+    public MistakeResponse(Long id, String content, List<TagResponse> tags, Integer commentCount, Integer likeCount) {
         this.id = id;
         this.content = content;
         this.tags = tags;
         this.commentCount = commentCount;
         this.likeCount = likeCount;
-        this.memberId = memberId;
-        this.memberName = memberName;
     }
-
-    private static final Integer TEST_COMMENT_COUNT = 13;
-    private static final Integer TEST_LIKE_COUNT = 11;
 
     public static MistakeResponse from(Mistake mistake) {
         List<TagResponse> tag = mistake.getTags().stream().map(
@@ -45,8 +37,8 @@ public class MistakeResponse {
         return MistakeResponse.builder()
                 .id(mistake.getId())
                 .content(mistake.getContent())
-                .commentCount(TEST_COMMENT_COUNT)
-                .likeCount(TEST_LIKE_COUNT)
+                .commentCount(mistake.getComments().size())
+                .likeCount(mistake.getLikes().size())
                 .tags(tag)
                 .build();
     }
