@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import weavers.siltarae.global.dto.request.PageRequest;
 import weavers.siltarae.mistake.dto.request.MistakeCreateRequest;
 import weavers.siltarae.mistake.dto.response.MistakeListResponse;
 import weavers.siltarae.mistake.dto.response.MistakeResponse;
@@ -32,8 +33,8 @@ public class MistakeController {
     }
 
     @GetMapping
-    public ResponseEntity<MistakeListResponse> getMistakes(Pageable pageable) {
-        return ResponseEntity.ok(mistakeService.getMistakeList(TEST_USER_ID, pageable));
+    public ResponseEntity<MistakeListResponse> getMistakes(PageRequest request) {
+        return ResponseEntity.ok(mistakeService.getMistakeList(TEST_USER_ID, request.toPageable()));
     }
 
     @GetMapping("/{mistakeId}")
