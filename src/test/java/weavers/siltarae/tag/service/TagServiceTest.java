@@ -70,7 +70,7 @@ class TagServiceTest {
     @Test
     void 사용자의_태그_목록을_조회할_수_있다() {
         // given
-        given(tagRepository.findAllByMember_IdAndDeletedAtIsNotNull(1L))
+        given(tagRepository.findAllByMember_IdAndDeletedAtIsNull(1L))
                 .willReturn(List.of(COMPANY_TAG(), DAILY_TAG()));
 
         // when

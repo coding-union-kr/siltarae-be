@@ -34,7 +34,7 @@ public class TagService {
         );
 
         final Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new BadRequestException(NOT_FOUND_USER));
+                .orElseThrow(() -> new BadRequestException(NOT_FOUND_MEMBER));
 
         if (checkDuplicateTagName(member.getId(), tagCreateRequest.getName())) {
             throw new BadRequestException(DUPLICATED_TAG_NAME);
@@ -52,7 +52,7 @@ public class TagService {
 
     @Transactional(readOnly = true)
     public TagListResponse getTagList(final Long memberId) {
-        List<Tag> tagList = tagRepository.findAllByMember_IdAndDeletedAtIsNotNull(memberId);
+        List<Tag> tagList = tagRepository.findAllByMember_IdAndDeletedAtIsNull(memberId);
 
         return TagListResponse.from(tagList);
     }
