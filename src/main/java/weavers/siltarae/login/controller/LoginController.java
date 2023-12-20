@@ -53,4 +53,12 @@ public class LoginController {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(accessTokenResponse);
     }
+
+    @DeleteMapping("/logout")
+    public ResponseEntity<Void> logout(@CookieValue("refresh-token") final String refreshToken) {
+        loginService.logout(refreshToken);
+
+        return ResponseEntity.noContent().build();
+    }
+
 }
