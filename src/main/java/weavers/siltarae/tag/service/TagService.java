@@ -52,7 +52,7 @@ public class TagService {
 
     @Transactional(readOnly = true)
     public TagListResponse getTagList(final Long memberId) {
-        List<Tag> tagList = tagRepository.findAllByMember_IdAndDeletedAtIsNotNull(memberId);
+        List<Tag> tagList = tagRepository.findAllByMember_IdAndDeletedAtIsNull(memberId);
 
         return TagListResponse.from(tagList);
     }
