@@ -2,12 +2,15 @@ package weavers.siltarae.tag;
 
 import weavers.siltarae.tag.domain.Tag;
 
+import java.util.List;
+
 public class TagTestFixture {
 
     public static Tag COMPANY_TAG() {
         return Tag.builder()
                 .id(1L)
                 .name("회사")
+                .mistakes(List.of())
                 .build();
     }
 
@@ -15,6 +18,7 @@ public class TagTestFixture {
         return Tag.builder()
                 .id(1L)
                 .name("일상")
+                .mistakes(List.of())
                 .build();
     }
 
@@ -22,6 +26,7 @@ public class TagTestFixture {
         Tag deletedTag = Tag.builder()
                             .id(1L)
                             .name("모의고사")
+                            .mistakes(List.of())
                             .build();
 
         deletedTag.delete();
