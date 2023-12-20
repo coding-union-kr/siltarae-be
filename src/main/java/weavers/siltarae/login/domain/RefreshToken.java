@@ -12,17 +12,18 @@ import org.springframework.data.redis.core.TimeToLive;
 public class RefreshToken {
 
     @Id
-    private Long memberId;
     private String refreshToken;
+
+    private Long memberId;
 
     @TimeToLive
     @Value("${jwt.refresh-expiration-time}")
     private Long timeToLive;
 
     @Builder
-    public RefreshToken(Long memberId, String refreshToken, Long timeToLive) {
-        this.memberId = memberId;
+    public RefreshToken(String refreshToken, Long memberId, Long timeToLive) {
         this.refreshToken = refreshToken;
+        this.memberId = memberId;
         this.timeToLive = timeToLive;
     }
 }

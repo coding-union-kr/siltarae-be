@@ -90,11 +90,12 @@ public class TokenProvider {
     }
 
     private void validateRefreshToken(final String token, final Long memberId) {
-        RefreshToken refreshToken = refreshTokenRepository.findById(memberId)
+        RefreshToken refreshToken = refreshTokenRepository.findById(token)
                 .orElseThrow(() -> new RefreshTokenException(ExceptionCode.EXPIRED_REFRESH_TOKEN));
 
-        if(token.equals(refreshToken.getRefreshToken())) return;
-        throw new BadRequestException(ExceptionCode.INVALID_REFRESH_TOKEN);
+        if(!memberId.equals(refreshToken.getMemberId())) {
+            throw new BadRequestException(ExceptionCode.INVALID_REFRESH_TOKEN);
+        }
     }
 
     public Long getMemberIdFromAccessToken(final String accessToken) {
@@ -114,5 +115,9 @@ public class TokenProvider {
         } catch (JwtException | IllegalArgumentException e) {
             throw new BadRequestException(ExceptionCode.INVALID_ACCESS_TOKEN);
         }
+    }
+
+    public void deleteRefreshToken(final String token) {
+        refreshTokenRepository.deleteById(token);
     }
 }

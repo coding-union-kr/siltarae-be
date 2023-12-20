@@ -39,6 +39,7 @@ public class LoginService {
         final String accessToken = getAccessTokenFromHeader(authorizationHeader);
 
         if(!tokenProvider.isExpiredAccessAndValidRefresh(accessToken, refreshToken)) {
+            logout(refreshToken);
             throw new AuthException(ExceptionCode.FAIL_TO_VALIDATE_TOKEN);
         }
 
@@ -66,5 +67,9 @@ public class LoginService {
                 .socialType(memberInfo.getSocialType())
                 .build();
         return memberRepository.save(createdMember);
+    }
+
+    public void logout(String refreshToken) {
+        tokenProvider.deleteRefreshToken(refreshToken);
     }
 }
