@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import weavers.siltarae.login.Auth;
 import weavers.siltarae.login.dto.response.AccessTokenResponse;
 import weavers.siltarae.login.dto.response.TokenPair;
 import weavers.siltarae.login.service.LoginService;
@@ -55,7 +56,9 @@ public class LoginController {
     }
 
     @DeleteMapping("/logout")
-    public ResponseEntity<Void> logout(@CookieValue("refresh-token") final String refreshToken) {
+    public ResponseEntity<Void> logout(
+            @Auth final Long memberId,
+            @CookieValue("refresh-token") final String refreshToken) {
         loginService.logout(refreshToken);
 
         return ResponseEntity.noContent().build();

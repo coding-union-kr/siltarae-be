@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import weavers.siltarae.like.service.LikeService;
+import weavers.siltarae.login.Auth;
 
 @Tag(name = "[좋아요] 좋아요 Controller")
 @RestController
@@ -12,13 +13,13 @@ import weavers.siltarae.like.service.LikeService;
 @RequestMapping("/api/v1/like")
 public class LikeController {
 
-    private static final Long TEST_USER_ID = 1L;
     private final LikeService likeService;
 
     @PostMapping
     public ResponseEntity<Void> addLike(
+            @Auth Long memberId,
             @RequestParam("mistakeId") Long mistakeId) {
-        likeService.like(TEST_USER_ID, mistakeId);
+        likeService.like(memberId, mistakeId);
 
         return ResponseEntity.ok().build();
     }
