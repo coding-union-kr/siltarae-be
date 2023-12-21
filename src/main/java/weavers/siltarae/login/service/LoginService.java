@@ -4,8 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import weavers.siltarae.global.exception.AuthException;
-import weavers.siltarae.global.exception.BadRequestException;
 import weavers.siltarae.global.exception.ExceptionCode;
+import weavers.siltarae.login.AccessTokenExtractor;
 import weavers.siltarae.login.domain.GoogleProvider;
 import weavers.siltarae.login.domain.TokenProvider;
 import weavers.siltarae.login.dto.response.AccessTokenResponse;
@@ -20,10 +20,9 @@ import weavers.siltarae.member.domain.repository.MemberRepository;
 public class LoginService {
 
     private final MemberRepository memberRepository;
+    private final AccessTokenExtractor accessTokenExtractor;
     private final TokenProvider tokenProvider;
     private final GoogleProvider googleProvider;
-
-    private final String BEARER_TYPE = "Bearer";
 
     public TokenPair login(String socialType, String code) {
         String authAccessToken = googleProvider.requestAccessToken(code);
@@ -36,7 +35,7 @@ public class LoginService {
     }
 
     public AccessTokenResponse renewAccessToken(String authorizationHeader, String refreshToken) {
-        final String accessToken = getAccessTokenFromHeader(authorizationHeader);
+        final String accessToken = accessTokenExtractor.extractAccessToken(authorizationHeader);
 
         if(!tokenProvider.isExpiredAccessAndValidRefresh(accessToken, refreshToken)) {
             logout(refreshToken);
@@ -50,14 +49,6 @@ public class LoginService {
                 .accessToken(newAccessToken)
                 .build();
     }
-
-    private String getAccessTokenFromHeader(String authorizationHeader) {
-        if(authorizationHeader==null || !authorizationHeader.startsWith(BEARER_TYPE)) {
-            throw new BadRequestException(ExceptionCode.INVALID_REQUEST);
-        }
-        return authorizationHeader.substring(BEARER_TYPE.length()).trim();
-    }
-
 
     private Member createMember(MemberInfoResponse memberInfo) {
         Member createdMember = Member.builder()
