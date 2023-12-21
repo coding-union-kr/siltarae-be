@@ -57,10 +57,10 @@ public class TagService {
         return TagListResponse.from(tagList);
     }
 
-    public void deleteTags(final List<Long> tagIdList) {
+    public void deleteTags(final Long memberId, final List<Long> tagIdList) {
         List<Tag> tagList = tagRepository.findAllById(tagIdList);
 
-        if(hasDeletedTag(tagList)) {
+        if(hasDeletedTag(tagList) || hasOthersTag(memberId, tagList)) {
             throw new BadRequestException(NOT_FOUND_TAG);
         }
 
@@ -73,6 +73,11 @@ public class TagService {
 
     private boolean hasDeletedTag(List<Tag> tagList) {
         return tagList.stream().anyMatch(Tag::isDeleted);
+    }
+
+    private boolean hasOthersTag(Long memberId, List<Tag> tagList) {
+        return tagList.stream()
+                .anyMatch(tag -> !memberId.equals(tag.getMember().getId()));
     }
 
 
