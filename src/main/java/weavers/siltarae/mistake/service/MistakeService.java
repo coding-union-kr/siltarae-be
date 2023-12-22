@@ -53,7 +53,11 @@ public class MistakeService {
     }
 
     private List<Long> getTagIdsFromRequest(MistakeListRequest request) {
-        return request.getTag() != null ? getLongs(request) : Collections.emptyList();
+        if (request.getTag() != null) {
+            return getLongs(request);
+        }
+
+        return Collections.emptyList();
     }
 
     private Page<Mistake> getMistakes(Long memberId, List<Long> tagIds, Pageable pageable) {
