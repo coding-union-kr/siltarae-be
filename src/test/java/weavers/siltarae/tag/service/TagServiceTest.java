@@ -90,7 +90,22 @@ class TagServiceTest {
         // when
 
         // then
-        assertThatThrownBy(() -> tagService.deleteTags(tagIdList))
+        assertThatThrownBy(() -> tagService.deleteTags(1L, tagIdList))
+                .isInstanceOf(BadRequestException.class)
+                .hasMessage("해당하는 태그가 존재하지 않습니다.");
+    }
+
+    @Test
+    void 타인의_태그를_삭제하면_예외가_발생한다() {
+        // given
+        given(tagRepository.findAllById(anyList()))
+                .willReturn(List.of(COMPANY_TAG(), OTHERS_TAG(), DAILY_TAG()));
+        List<Long> tagIdList = List.of(1L, 2L, 4L);
+
+        // when
+
+        // then
+        assertThatThrownBy(() -> tagService.deleteTags(1L, tagIdList))
                 .isInstanceOf(BadRequestException.class)
                 .hasMessage("해당하는 태그가 존재하지 않습니다.");
     }

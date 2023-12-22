@@ -20,6 +20,7 @@ public enum ExceptionCode {
 
     NOT_SUPPORTED_AUTH_SERVICE(5001, "지원하는 소셜 로그인 서비스가 아닙니다."),
     INVALID_AUTHORIZATION_CODE(5002, "인증 코드가 유효하지 않습니다."),
+    AVAILABLE_AFTER_LOGIN(5003, "로그인 후 이용 가능합니다."),
     EXPIRED_ACCESS_TOKEN(5101, "만료된 액세스 토큰입니다."),
     EXPIRED_REFRESH_TOKEN(5102, "만료된 리프레시 토큰입니다."),
     INVALID_ACCESS_TOKEN(5103, "유효하지 않은 액세스 토큰입니다."),
