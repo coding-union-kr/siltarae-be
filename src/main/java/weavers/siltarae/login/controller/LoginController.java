@@ -7,6 +7,7 @@ import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import weavers.siltarae.login.Auth;
+import weavers.siltarae.login.dto.request.LoginRequest;
 import weavers.siltarae.login.dto.response.AccessTokenResponse;
 import weavers.siltarae.login.dto.response.TokenPair;
 import weavers.siltarae.login.service.LoginService;
@@ -21,11 +22,11 @@ public class LoginController {
 
     private final LoginService loginService;
 
-    @GetMapping("/login/{socialType}")
+    @PostMapping("/login/{socialType}")
     public ResponseEntity<AccessTokenResponse> login(@PathVariable final String socialType,
-                                                     @RequestParam final String code) {
+                                                     @RequestBody final LoginRequest request) {
 
-        final TokenPair tokenPair = loginService.login(socialType, code);
+        final TokenPair tokenPair = loginService.login(socialType, request.getAuthCode());
 
         ResponseCookie cookie = ResponseCookie.from("refresh-token", tokenPair.getRefreshToken())
                 .maxAge(tokenPair.getRefreshTokenExpirationTime())
