@@ -35,8 +35,8 @@ public class TagController {
     }
 
     @PostMapping("/delete")
-    public ResponseEntity<Void> deleteTags(@RequestBody final List<Long> tagIdList) {
-        tagService.deleteTags(tagIdList);
+    public ResponseEntity<Void> deleteTags(@Auth Long memberId, @RequestBody final List<Long> tagIdList) {
+        tagService.deleteTags(memberId, tagIdList);
 
         return ResponseEntity.noContent().build();
     }
