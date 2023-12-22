@@ -9,6 +9,7 @@ import weavers.siltarae.comment.dto.request.CommentCreateRequest;
 import weavers.siltarae.comment.dto.request.CommentListRequest;
 import weavers.siltarae.comment.dto.response.CommentListResponse;
 import weavers.siltarae.comment.service.CommentService;
+import weavers.siltarae.login.Auth;
 
 @Tag(name = "[댓글] 댓글 Controller")
 @RestController
@@ -17,7 +18,6 @@ import weavers.siltarae.comment.service.CommentService;
 public class CommentController {
 
     private final CommentService commentService;
-    private static final Long TEST_USER_ID = 1L;
 
     @GetMapping
     public ResponseEntity<CommentListResponse> getComments(
@@ -28,16 +28,18 @@ public class CommentController {
 
     @PostMapping
     public ResponseEntity<Void> createComment(
+            @Auth Long memberId,
             @RequestBody @Valid CommentCreateRequest request) {
-        commentService.save(request, TEST_USER_ID);
+        commentService.save(request, memberId);
 
         return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/{commentId}")
     public ResponseEntity<Void> deleteComment(
+            @Auth Long memberId,
             @PathVariable("commentId") Long commentId) {
-        commentService.delete(commentId, TEST_USER_ID);
+        commentService.delete(commentId, memberId);
 
         return ResponseEntity.noContent().build();
     }
