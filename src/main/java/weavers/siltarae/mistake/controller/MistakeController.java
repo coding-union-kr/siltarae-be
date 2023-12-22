@@ -5,9 +5,9 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import weavers.siltarae.global.dto.request.PageRequest;
 import weavers.siltarae.login.Auth;
 import weavers.siltarae.mistake.dto.request.MistakeCreateRequest;
+import weavers.siltarae.mistake.dto.request.MistakeListRequest;
 import weavers.siltarae.mistake.dto.response.MistakeListResponse;
 import weavers.siltarae.mistake.dto.response.MistakeResponse;
 import weavers.siltarae.mistake.service.MistakeService;
@@ -32,8 +32,8 @@ public class MistakeController {
     }
 
     @GetMapping
-    public ResponseEntity<MistakeListResponse> getMistakes(@Auth Long memberId, PageRequest request) {
-        return ResponseEntity.ok(mistakeService.getMistakeList(memberId, request.toPageable()));
+    public ResponseEntity<MistakeListResponse> getMistakes(@Auth Long memberId, MistakeListRequest request) {
+        return ResponseEntity.ok(mistakeService.getMistakeList(memberId, request));
     }
 
     @GetMapping("/{mistakeId}")
