@@ -32,9 +32,9 @@ public class MistakeListResponse {
                 MistakeResponse::from
         ).collect(Collectors.toList());
 
-        List<MistakeTagResponse> tagResponses = tag.stream().map(
-                MistakeTagResponse::from
-        ).toList();
+        List<MistakeTagResponse> tagResponses = tag.stream()
+        .map(MistakeTagResponse::from)
+        .toList();
 
         return MistakeListResponse.builder()
                 .totalCount(mistakes.getTotalElements())
