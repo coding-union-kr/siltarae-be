@@ -32,6 +32,10 @@ public class Member extends BaseEntity {
     @Column
     private SocialType socialType;
 
+    public void update(String nickname) {
+        this.nickname = nickname;
+    }
+
     @Override
     public void delete() {
         super.delete();
