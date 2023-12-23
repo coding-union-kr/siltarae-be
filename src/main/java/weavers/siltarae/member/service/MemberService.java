@@ -19,7 +19,7 @@ public class MemberService {
     private final MemberRepository memberRepository;
 
     public MemberResponse updateMember(Long memberId, MemberUpdateRequest request) {
-        Member member = memberRepository.findById(memberId)
+        Member member = memberRepository.findByIdAndDeletedAtIsNull(memberId)
                 .orElseThrow(() -> new BadRequestException(NOT_FOUND_MEMBER));
 
         member.update(request.getNickname());
