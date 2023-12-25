@@ -23,8 +23,10 @@ public class MemberController {
     }
 
     @DeleteMapping
-    public ResponseEntity<Void> deleteMember(@Auth Long memberId) {
-        memberService.deleteMember(memberId);
+    public ResponseEntity<Void> deleteMember(
+            @Auth Long memberId,
+            @CookieValue("refresh-token") final String refreshToken) {
+        memberService.deleteMember(memberId, refreshToken);
 
         return ResponseEntity.noContent().build();
     }
