@@ -1,4 +1,4 @@
-package weavers.siltarae.member.dto;
+package weavers.siltarae.member.dto.response;
 
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -8,17 +8,17 @@ import weavers.siltarae.member.domain.Member;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class MemberResponse {
+public class MemberNicknameResponse {
 
     private String nickname;
 
     @Builder
-    public MemberResponse(String nickname) {
+    public MemberNicknameResponse(String nickname) {
         this.nickname = nickname;
     }
 
-    public static MemberResponse from(Member member) {
-        return MemberResponse.builder()
+    public static MemberNicknameResponse from(Member member) {
+        return MemberNicknameResponse.builder()
                 .nickname(member.getNickname())
                 .build();
     }

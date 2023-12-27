@@ -1,4 +1,4 @@
-package weavers.siltarae.member.dto;
+package weavers.siltarae.member.dto.request;
 
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Pattern;
