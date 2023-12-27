@@ -27,6 +27,9 @@ public enum ExceptionCode {
     INVALID_REFRESH_TOKEN(5104, "유효하지 않은 리프레시 토큰입니다."),
     FAIL_TO_VALIDATE_TOKEN(5105, "토큰 유효성 검사에 실패했습니다."),
 
+    INVALID_IMAGE_FILE(6001, "이미지 파일을 업로드해주세요."),
+    INVALID_IMAGE_PATH(6002, "유효하지 않은 이미지 경로입니다."),
+    FAIL_TO_UPLOAD_IMAGE(6003, "이미지 파일 업로드에 실패했습니다."),
 
     NOT_FOUND_COMMENT(7001, "해당하는 댓글이 존재하지 않습니다."),
     COMMENT_VALID_ERROR(7001, "삭제되었거나 본인이 작성한 댓글이 아닙니다."),
