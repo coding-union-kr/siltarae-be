@@ -19,14 +19,20 @@ public class MistakeResponse {
     private List<MistakeTagResponse> tags;
     private Integer commentCount;
     private Integer likeCount;
+    private Long memberId;
+    private String memberName;
+    private String memberImage;
 
     @Builder
-    public MistakeResponse(Long id, String content, List<MistakeTagResponse> tags, Integer commentCount, Integer likeCount) {
+    public MistakeResponse(Long id, String content, List<MistakeTagResponse> tags, Integer commentCount, Integer likeCount, Long memberId, String memberName, String memberImage) {
         this.id = id;
         this.content = content;
         this.tags = tags;
         this.commentCount = commentCount;
         this.likeCount = likeCount;
+        this.memberId = memberId;
+        this.memberName = memberName;
+        this.memberImage = memberImage;
     }
 
     public static MistakeResponse from(Mistake mistake) {
@@ -40,6 +46,9 @@ public class MistakeResponse {
                 .commentCount(mistake.getComments().size())
                 .likeCount(mistake.getLikes().size())
                 .tags(tag)
+                .memberId(mistake.getMember().getId())
+                .memberName(mistake.getMember().getNickname())
+                .memberImage(mistake.getMember().getImageName())
                 .build();
     }
 
