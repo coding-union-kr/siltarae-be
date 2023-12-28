@@ -11,6 +11,7 @@ import weavers.siltarae.tag.dto.request.TagCreateRequest;
 import weavers.siltarae.tag.dto.response.TagListResponse;
 import weavers.siltarae.member.domain.Member;
 import weavers.siltarae.member.domain.repository.MemberRepository;
+import weavers.siltarae.tag.dto.response.TagResponse;
 
 import java.util.List;
 
@@ -26,7 +27,7 @@ public class TagService {
 
     private final MemberRepository memberRepository;
 
-    public Long save(final Long memberId, final TagCreateRequest tagCreateRequest) {
+    public TagResponse save(final Long memberId, final TagCreateRequest tagCreateRequest) {
         log.info("============= memberId : {} =============", memberId);
         List<Member> allMember = memberRepository.findAll();
         allMember.forEach(
@@ -47,7 +48,7 @@ public class TagService {
 
         Tag tag = tagRepository.save(createdTag);
 
-        return tag.getId();
+        return TagResponse.from(tag);
     }
 
     @Transactional(readOnly = true)
