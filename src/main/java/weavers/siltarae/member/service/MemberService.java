@@ -11,8 +11,9 @@ import weavers.siltarae.global.image.domain.Image;
 import weavers.siltarae.login.domain.TokenProvider;
 import weavers.siltarae.member.domain.Member;
 import weavers.siltarae.member.domain.repository.MemberRepository;
-import weavers.siltarae.member.dto.MemberResponse;
-import weavers.siltarae.member.dto.MemberUpdateRequest;
+import weavers.siltarae.member.dto.response.MemberInfoResponse;
+import weavers.siltarae.member.dto.response.MemberNicknameResponse;
+import weavers.siltarae.member.dto.request.MemberUpdateRequest;
 
 import static weavers.siltarae.global.exception.ExceptionCode.*;
 
@@ -27,6 +28,13 @@ public class MemberService {
 
     @Value("${cloud.aws.s3.folder.member}")
     private String folder;
+
+    public MemberInfoResponse getMemberInfo(Long memberId) {
+        Member member = memberRepository.findByIdAndDeletedAtIsNull(memberId)
+                .orElseThrow(() -> new BadRequestException(NOT_FOUND_MEMBER));
+
+        return MemberInfoResponse.from(member);
+    }
 
     public String uploadMemberImage(Long memberId, MultipartFile file) {
         Image image = new Image(file);
@@ -48,13 +56,13 @@ public class MemberService {
         imageUtil.deleteImage(folder, member.getImageName());
     }
 
-    public MemberResponse changeMemberNickname(Long memberId, MemberUpdateRequest request) {
+    public MemberNicknameResponse changeMemberNickname(Long memberId, MemberUpdateRequest request) {
         Member member = memberRepository.findByIdAndDeletedAtIsNull(memberId)
                 .orElseThrow(() -> new BadRequestException(NOT_FOUND_MEMBER));
 
         member.updateNickname(request.getNickname());
 
-        return MemberResponse.from(member);
+        return MemberNicknameResponse.from(member);
     }
 
     public void deleteMember(Long memberId, String refreshToken) {

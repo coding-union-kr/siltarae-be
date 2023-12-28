@@ -53,7 +53,7 @@ public class MistakeService {
     }
 
     private List<Long> getTagIdsFromRequest(MistakeListRequest request) {
-        if (request.getTag() != null) {
+        if (!request.getTag().isEmpty()) {
             return getLongs(request);
         }
 
