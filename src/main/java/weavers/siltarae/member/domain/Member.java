@@ -14,7 +14,7 @@ import weavers.siltarae.global.BaseEntity;
 public class Member extends BaseEntity {
 
     private static final String DELETED_MEMBER_NICKNAME = "탈퇴회원";
-    private static final String DEFAULT_IMAGE = "default_image.png";
+    private static final String DEFAULT_IMAGE = "https://weavers-siltarae.s3.ap-northeast-2.amazonaws.com/profile/default_image.png";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -67,12 +67,12 @@ public class Member extends BaseEntity {
     }
 
     @Builder
-    public Member(Long id, String identifier, String nickname, String email, String imageUrl, SocialType socialType) {
+    public Member(Long id, String identifier, String nickname, String email, SocialType socialType) {
         this.id = id;
         this.identifier = identifier;
         this.nickname = nickname;
         this.email = email;
-        this.imageUrl = imageUrl;
+        this.imageUrl = DEFAULT_IMAGE;
         this.socialType = socialType;
     }
 }
