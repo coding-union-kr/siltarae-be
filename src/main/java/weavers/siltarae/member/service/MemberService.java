@@ -15,6 +15,8 @@ import weavers.siltarae.member.dto.response.MemberInfoResponse;
 import weavers.siltarae.member.dto.response.MemberNicknameResponse;
 import weavers.siltarae.member.dto.request.MemberUpdateRequest;
 
+import java.io.IOException;
+
 import static weavers.siltarae.global.exception.ExceptionCode.*;
 
 @Service
@@ -37,11 +39,17 @@ public class MemberService {
     }
 
     public String uploadMemberImage(Long memberId, MultipartFile file) {
-        Image image = new Image(file);
-        String imageUrl = imageUtil.uploadImage(folder, image);
-
         Member member = memberRepository.findByIdAndDeletedAtIsNull(memberId)
                 .orElseThrow(() -> new BadRequestException(NOT_FOUND_MEMBER));
+
+        Image image = new Image(file);
+        String imageUrl;
+        try {
+            imageUrl = imageUtil.uploadImage(folder, image);
+        } catch (IOException e) {
+            imageUrl = member.getDefaultImage();
+        }
+
         member.updateImage(imageUrl);
 
         return imageUrl;
