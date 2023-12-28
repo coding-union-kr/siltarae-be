@@ -58,6 +58,10 @@ public class Member extends BaseEntity {
         return this.getImageUrl().equals(DEFAULT_IMAGE);
     }
 
+    public String getDefaultImage() {
+        return DEFAULT_IMAGE;
+    }
+
     private String getImagePath() {
         return this.imageUrl.substring(0, this.imageUrl.lastIndexOf("/")+1);
     }
