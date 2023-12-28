@@ -55,7 +55,11 @@ public class Member extends BaseEntity {
     }
 
     public boolean hasDefaultImage() {
-        return this.getImageName().equals(DEFAULT_IMAGE);
+        return this.getImageUrl().equals(DEFAULT_IMAGE);
+    }
+
+    public String getDefaultImage() {
+        return DEFAULT_IMAGE;
     }
 
     private String getImagePath() {
