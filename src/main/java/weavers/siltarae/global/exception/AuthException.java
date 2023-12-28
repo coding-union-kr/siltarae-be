@@ -3,13 +3,9 @@ package weavers.siltarae.global.exception;
 import lombok.Getter;
 
 @Getter
-public class AuthException extends RuntimeException{
-
-    private final int code;
-    private final String message;
+public class AuthException extends BadRequestException{
 
     public AuthException(final ExceptionCode exceptionCode) {
-        this.code = exceptionCode.getCode();
-        this.message = exceptionCode.getMessage();
+        super(exceptionCode);
     }
 }

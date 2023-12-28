@@ -14,6 +14,7 @@ import weavers.siltarae.global.BaseEntity;
 public class Member extends BaseEntity {
 
     private static final String DELETED_MEMBER_NICKNAME = "탈퇴회원";
+    private static final String DEFAULT_IMAGE = "https://weavers-siltarae.s3.ap-northeast-2.amazonaws.com/profile/default_image.png";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,9 +29,20 @@ public class Member extends BaseEntity {
     @Column
     private String email;
 
+    @Column
+    private String imageUrl;
+
     @Enumerated(value = EnumType.STRING)
     @Column
     private SocialType socialType;
+
+    public void updateNickname(String nickname) {
+        this.nickname = nickname;
+    }
+
+    public void updateImage(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
 
     @Override
     public void delete() {
@@ -39,6 +51,19 @@ public class Member extends BaseEntity {
         this.identifier = null;
         this.nickname = DELETED_MEMBER_NICKNAME;
         this.email = null;
+        this.imageUrl = this.getImagePath() + DEFAULT_IMAGE;
+    }
+
+    public boolean hasDefaultImage() {
+        return this.getImageName().equals(DEFAULT_IMAGE);
+    }
+
+    private String getImagePath() {
+        return this.imageUrl.substring(0, this.imageUrl.lastIndexOf("/")+1);
+    }
+
+    public String getImageName() {
+        return this.imageUrl.substring(this.imageUrl.lastIndexOf("/")+1);
     }
 
     @Builder
@@ -47,6 +72,7 @@ public class Member extends BaseEntity {
         this.identifier = identifier;
         this.nickname = nickname;
         this.email = email;
+        this.imageUrl = DEFAULT_IMAGE;
         this.socialType = socialType;
     }
 }

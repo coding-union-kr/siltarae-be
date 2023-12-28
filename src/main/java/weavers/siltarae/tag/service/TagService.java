@@ -1,7 +1,6 @@
 package weavers.siltarae.tag.service;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import weavers.siltarae.global.exception.BadRequestException;
@@ -11,6 +10,7 @@ import weavers.siltarae.tag.dto.request.TagCreateRequest;
 import weavers.siltarae.tag.dto.response.TagListResponse;
 import weavers.siltarae.member.domain.Member;
 import weavers.siltarae.member.domain.repository.MemberRepository;
+import weavers.siltarae.tag.dto.response.TagResponse;
 
 import java.util.List;
 
@@ -19,20 +19,13 @@ import static weavers.siltarae.global.exception.ExceptionCode.*;
 @Service
 @RequiredArgsConstructor
 @Transactional
-@Slf4j
 public class TagService {
 
     private final TagRepository tagRepository;
 
     private final MemberRepository memberRepository;
 
-    public Long save(final Long memberId, final TagCreateRequest tagCreateRequest) {
-        log.info("============= memberId : {} =============", memberId);
-        List<Member> allMember = memberRepository.findAll();
-        allMember.forEach(
-                member -> log.info("============= memberId : {} =============", member.getId())
-        );
-
+    public TagResponse save(final Long memberId, final TagCreateRequest tagCreateRequest) {
         final Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new BadRequestException(NOT_FOUND_MEMBER));
 
@@ -47,7 +40,7 @@ public class TagService {
 
         Tag tag = tagRepository.save(createdTag);
 
-        return tag.getId();
+        return TagResponse.from(tag);
     }
 
     @Transactional(readOnly = true)

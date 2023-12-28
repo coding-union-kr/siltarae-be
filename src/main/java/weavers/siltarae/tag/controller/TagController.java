@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import weavers.siltarae.login.Auth;
 import weavers.siltarae.tag.dto.request.TagCreateRequest;
 import weavers.siltarae.tag.dto.response.TagListResponse;
+import weavers.siltarae.tag.dto.response.TagResponse;
 import weavers.siltarae.tag.service.TagService;
 
 import java.util.List;
@@ -19,12 +20,12 @@ public class TagController {
     private final TagService tagService;
 
     @PostMapping
-    public ResponseEntity<Void> createTag(
+    public ResponseEntity<TagResponse> createTag(
             @Auth Long memberId,
             @RequestBody @Valid final TagCreateRequest request) {
-        tagService.save(memberId, request);
+        TagResponse response = tagService.save(memberId, request);
 
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping
