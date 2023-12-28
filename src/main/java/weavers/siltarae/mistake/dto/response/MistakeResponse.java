@@ -21,10 +21,10 @@ public class MistakeResponse {
     private Integer likeCount;
     private Long memberId;
     private String memberName;
-    private String memberImage;
+    private String memberImageUrl;
 
     @Builder
-    public MistakeResponse(Long id, String content, List<MistakeTagResponse> tags, Integer commentCount, Integer likeCount, Long memberId, String memberName, String memberImage) {
+    public MistakeResponse(Long id, String content, List<MistakeTagResponse> tags, Integer commentCount, Integer likeCount, Long memberId, String memberName, String memberImageUrl) {
         this.id = id;
         this.content = content;
         this.tags = tags;
@@ -32,7 +32,7 @@ public class MistakeResponse {
         this.likeCount = likeCount;
         this.memberId = memberId;
         this.memberName = memberName;
-        this.memberImage = memberImage;
+        this.memberImageUrl = memberImageUrl;
     }
 
     public static MistakeResponse from(Mistake mistake) {
@@ -48,7 +48,7 @@ public class MistakeResponse {
                 .tags(tag)
                 .memberId(mistake.getMember().getId())
                 .memberName(mistake.getMember().getNickname())
-                .memberImage(mistake.getMember().getImageName())
+                .memberImageUrl(mistake.getMember().getImageUrl())
                 .build();
     }
 
