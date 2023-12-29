@@ -38,9 +38,8 @@ public class MistakeController {
 
     @GetMapping("/{mistakeId}")
     public ResponseEntity<MistakeResponse> getMistake(
-            @Auth Long memberId,
             @PathVariable("mistakeId") Long mistakeId) {
-        return ResponseEntity.ok(mistakeService.getMistake(memberId, mistakeId));
+        return ResponseEntity.ok(mistakeService.getMistake(mistakeId));
     }
 
     @PostMapping("/delete")
