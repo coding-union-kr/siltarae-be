@@ -75,8 +75,8 @@ public class MistakeService {
     }
 
     @Transactional(readOnly = true)
-    public MistakeResponse getMistake(Long memberId, Long mistakeId) {
-        Mistake mistake = mistakeRepository.findByIdAndMemberAndDeletedAtIsNull(mistakeId, getTestUser(memberId))
+    public MistakeResponse getMistake(Long mistakeId) {
+        Mistake mistake = mistakeRepository.findByIdAndDeletedAtIsNull(mistakeId)
         .orElseThrow(() -> new BadRequestException(ExceptionCode.NOT_FOUND_MISTAKE)
         );
 
