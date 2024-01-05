@@ -76,12 +76,12 @@ public class Member extends BaseEntity {
     @PrePersist
     @PreUpdate
     public void encryptEmail() {
-        if (email != null) {
-            try {
-                this.email = CryptoUtil.encrypt(email);
-            } catch (Exception e) {
-                throw new BadRequestException(ExceptionCode.FAIL_ENCRYPT);
-            }
+        try {
+            this.email = CryptoUtil.encrypt(email);
+        } catch (NullPointerException e) {
+            throw new BadRequestException(ExceptionCode.MEMBER_EMAIL_ISNULL);
+        } catch (Exception e) {
+            throw new BadRequestException(ExceptionCode.FAIL_ENCRYPT);
         }
     }
 
