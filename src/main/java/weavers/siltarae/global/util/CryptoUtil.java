@@ -17,7 +17,7 @@ public class CryptoUtil {
     private static final String CIPHER_TRANSFORMATION = "AES/ECB/PKCS5Padding";
     private static String secretKey;
 
-    @Value("${custom.secretKey}")
+    @Value("${privacy.encryption.secretKey}")
     public void setSecretKey(String secretKey) {
         CryptoUtil.secretKey = secretKey;
     }
