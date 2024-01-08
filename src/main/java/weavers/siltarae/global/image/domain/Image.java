@@ -1,6 +1,7 @@
 package weavers.siltarae.global.image.domain;
 
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.web.multipart.MultipartFile;
 import weavers.siltarae.global.exception.BadRequestException;
@@ -9,6 +10,7 @@ import java.util.UUID;
 
 import static weavers.siltarae.global.exception.ExceptionCode.*;
 
+@Slf4j
 @Getter
 public class Image {
 
@@ -31,7 +33,7 @@ public class Image {
 
     private String createUUIDName(MultipartFile image) {
         String name = UUID.randomUUID().toString();
-        String fileExtension = EXTENSION_DELIMITER + FilenameUtils.getExtension(image.getName());
+        String fileExtension = EXTENSION_DELIMITER + FilenameUtils.getExtension(image.getOriginalFilename());
 
         return name + fileExtension;
     }
