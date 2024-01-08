@@ -33,15 +33,13 @@ public class MemberService {
     private String folder;
 
     public MemberInfoResponse getMemberInfo(Long memberId) {
-        Member member = memberRepository.findByIdAndDeletedAtIsNull(memberId)
-                .orElseThrow(() -> new BadRequestException(NOT_FOUND_MEMBER));
+        Member member = findMember(memberId);
 
         return MemberInfoResponse.from(member);
     }
 
     public String uploadMemberImage(Long memberId, MultipartFile file) {
-        Member member = memberRepository.findByIdAndDeletedAtIsNull(memberId)
-                .orElseThrow(() -> new BadRequestException(NOT_FOUND_MEMBER));
+        Member member = findMember(memberId);
 
         Image image = new Image(file);
         String imageUrl;
@@ -57,8 +55,7 @@ public class MemberService {
     }
 
     public MemberImageResponse deleteMemberImage(Long memberId) {
-        Member member = memberRepository.findByIdAndDeletedAtIsNull(memberId)
-                .orElseThrow(() -> new BadRequestException(NOT_FOUND_MEMBER));
+        Member member = findMember(memberId);
 
         if(!member.hasDefaultImage()) {
             imageUtil.deleteImage(folder, member.getImageName());
@@ -69,8 +66,7 @@ public class MemberService {
     }
 
     public MemberNicknameResponse changeMemberNickname(Long memberId, MemberUpdateRequest request) {
-        Member member = memberRepository.findByIdAndDeletedAtIsNull(memberId)
-                .orElseThrow(() -> new BadRequestException(NOT_FOUND_MEMBER));
+        Member member = findMember(memberId);
 
         member.updateNickname(request.getNickname());
 
@@ -78,8 +74,7 @@ public class MemberService {
     }
 
     public void deleteMember(Long memberId, String refreshToken) {
-        Member member = memberRepository.findByIdAndDeletedAtIsNull(memberId)
-                .orElseThrow(() -> new BadRequestException(NOT_FOUND_MEMBER));
+        Member member = findMember(memberId);
 
         if(!member.hasDefaultImage()) {
             imageUtil.deleteImage(folder, member.getImageName());
@@ -87,5 +82,10 @@ public class MemberService {
         member.delete();
 
         tokenProvider.deleteRefreshToken(refreshToken);
+    }
+
+    private Member findMember(Long memberId) {
+        return memberRepository.findByIdAndDeletedAtIsNull(memberId)
+                .orElseThrow(() -> new BadRequestException(NOT_FOUND_MEMBER));
     }
 }
