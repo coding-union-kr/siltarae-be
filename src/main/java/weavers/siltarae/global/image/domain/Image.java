@@ -20,13 +20,20 @@ public class Image {
     private final String name;
 
     public Image(MultipartFile file) {
-        validateEmptyImage(file);
+        validateEmptyFile(file);
+        validateImageFile(file);
         this.file = file;
         this.name = createUUIDName(file);
     }
 
-    public void validateEmptyImage(MultipartFile image) {
-        if(image.isEmpty() || !image.getContentType().startsWith("image")) {
+    private void validateEmptyFile(MultipartFile file) {
+        if(file == null || file.isEmpty()) {
+            throw new BadRequestException(INVALID_IMAGE_FILE);
+        }
+    }
+
+    private void validateImageFile(MultipartFile file) {
+        if(file.getContentType() == null || !file.getContentType().startsWith("image")) {
             throw new BadRequestException(INVALID_IMAGE_FILE);
         }
     }
