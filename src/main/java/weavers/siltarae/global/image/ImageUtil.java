@@ -23,7 +23,7 @@ public class ImageUtil {
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
 
-    public String uploadImage(String folder, Image image) throws IOException {
+    public String uploadImage(String folder, Image image) {
         String path = folder + image.getName();
         ObjectMetadata metadata = new ObjectMetadata();
 
@@ -35,6 +35,8 @@ public class ImageUtil {
             s3Client.putObject(bucket, path, inputStream, metadata);
         } catch(AmazonServiceException e) {
             throw new BadRequestException(INVALID_IMAGE_PATH);
+        } catch(IOException e) {
+            throw new BadRequestException(FAIL_TO_UPLOAD_IMAGE);
         }
 
         return s3Client.getUrl(bucket, path).toString();

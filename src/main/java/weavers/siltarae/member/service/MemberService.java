@@ -16,8 +16,6 @@ import weavers.siltarae.member.dto.response.MemberInfoResponse;
 import weavers.siltarae.member.dto.response.MemberNicknameResponse;
 import weavers.siltarae.member.dto.request.MemberUpdateRequest;
 
-import java.io.IOException;
-
 import static weavers.siltarae.global.exception.ExceptionCode.*;
 
 @Service
@@ -32,37 +30,39 @@ public class MemberService {
     @Value("${cloud.aws.s3.folder.member}")
     private String folder;
 
+    @Transactional(readOnly = true)
     public MemberInfoResponse getMemberInfo(Long memberId) {
         Member member = findMember(memberId);
 
         return MemberInfoResponse.from(member);
     }
 
-    public String uploadMemberImage(Long memberId, MultipartFile file) {
+    public MemberImageResponse updateMemberImage(Long memberId, MultipartFile file) {
         Member member = findMember(memberId);
 
-        Image image = new Image(file);
         String imageUrl;
-        try {
-            imageUrl = imageUtil.uploadImage(folder, image);
-        } catch (IOException e) {
-            imageUrl = member.getDefaultImage();
+        if (file == null || file.isEmpty()) {
+            imageUrl = member.getDefaultImageUrl();
+        } else {
+            imageUrl = uploadMemberImage(file);
         }
 
+        deleteMemberImage(member);
         member.updateImage(imageUrl);
 
-        return imageUrl;
+        return MemberImageResponse.from(imageUrl);
     }
 
-    public MemberImageResponse deleteMemberImage(Long memberId) {
-        Member member = findMember(memberId);
+    private String uploadMemberImage(MultipartFile file) {
 
-        if(!member.hasDefaultImage()) {
-            imageUtil.deleteImage(folder, member.getImageName());
-            member.updateImage(member.getDefaultImage());
-        }
+        Image image = new Image(file);
+        return imageUtil.uploadImage(folder, image);
+    }
 
-        return MemberImageResponse.from(member.getDefaultImage());
+    private void deleteMemberImage(Member member) {
+        if(member.hasDefaultImage()) return;
+
+        imageUtil.deleteImage(folder, member.getImageName());
     }
 
     public MemberNicknameResponse changeMemberNickname(Long memberId, MemberUpdateRequest request) {
