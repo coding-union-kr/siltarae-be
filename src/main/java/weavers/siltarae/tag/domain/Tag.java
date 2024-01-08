@@ -9,6 +9,7 @@ import weavers.siltarae.global.BaseEntity;
 import weavers.siltarae.mistake.domain.Mistake;
 import weavers.siltarae.member.domain.Member;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -33,11 +34,11 @@ public class Tag extends BaseEntity {
     private List<Mistake> mistakes;
 
     @Builder
-    public Tag(Long id, String name, Member member, List<Mistake> mistakes) {
+    public Tag(Long id, String name, Member member) {
         this.id = id;
         this.name = name;
         this.member = member;
-        this.mistakes = mistakes;
+        this.mistakes = new ArrayList<>();
     }
 
     @Override
