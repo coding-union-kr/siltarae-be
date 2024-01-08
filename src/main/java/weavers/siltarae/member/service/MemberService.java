@@ -11,6 +11,7 @@ import weavers.siltarae.global.image.domain.Image;
 import weavers.siltarae.login.domain.TokenProvider;
 import weavers.siltarae.member.domain.Member;
 import weavers.siltarae.member.domain.repository.MemberRepository;
+import weavers.siltarae.member.dto.response.MemberImageResponse;
 import weavers.siltarae.member.dto.response.MemberInfoResponse;
 import weavers.siltarae.member.dto.response.MemberNicknameResponse;
 import weavers.siltarae.member.dto.request.MemberUpdateRequest;
@@ -55,13 +56,16 @@ public class MemberService {
         return imageUrl;
     }
 
-    public void deleteMemberImage(Long memberId) {
+    public MemberImageResponse deleteMemberImage(Long memberId) {
         Member member = memberRepository.findByIdAndDeletedAtIsNull(memberId)
                 .orElseThrow(() -> new BadRequestException(NOT_FOUND_MEMBER));
 
-        if(member.hasDefaultImage()) return;
+        if(!member.hasDefaultImage()) {
+            imageUtil.deleteImage(folder, member.getImageName());
+            member.updateImage(member.getDefaultImage());
+        }
 
-        imageUtil.deleteImage(folder, member.getImageName());
+        return MemberImageResponse.from(member.getDefaultImage());
     }
 
     public MemberNicknameResponse changeMemberNickname(Long memberId, MemberUpdateRequest request) {

@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import weavers.siltarae.login.Auth;
+import weavers.siltarae.member.dto.response.MemberImageResponse;
 import weavers.siltarae.member.dto.response.MemberInfoResponse;
 import weavers.siltarae.member.dto.response.MemberNicknameResponse;
 import weavers.siltarae.member.dto.request.MemberUpdateRequest;
@@ -32,6 +33,13 @@ public class MemberController {
         String imageUrl = memberService.uploadMemberImage(memberId, file);
 
         return ResponseEntity.created(URI.create(imageUrl)).build();
+    }
+
+    @DeleteMapping("/image")
+    public ResponseEntity<MemberImageResponse> deleteMemberImage(@Auth Long memberId) {
+        MemberImageResponse response = memberService.deleteMemberImage(memberId);
+
+        return ResponseEntity.ok(response);
     }
 
     @PutMapping
