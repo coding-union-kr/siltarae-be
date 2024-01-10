@@ -3,11 +3,13 @@ package weavers.siltarae.comment.controller;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import weavers.siltarae.comment.dto.request.CommentCreateRequest;
 import weavers.siltarae.comment.dto.request.CommentListRequest;
 import weavers.siltarae.comment.dto.response.CommentListResponse;
+import weavers.siltarae.comment.dto.response.CommentResponse;
 import weavers.siltarae.comment.service.CommentService;
 import weavers.siltarae.login.Auth;
 
@@ -27,12 +29,13 @@ public class CommentController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> createComment(
+    public ResponseEntity<CommentResponse> createComment(
             @Auth Long memberId,
             @RequestBody @Valid CommentCreateRequest request) {
-        commentService.save(request, memberId);
+        CommentResponse commentResponse = commentService.save(request, memberId);
 
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(commentResponse);
     }
 
     @DeleteMapping("/{commentId}")
