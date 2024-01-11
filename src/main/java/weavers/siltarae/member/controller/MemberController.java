@@ -41,7 +41,7 @@ public class MemberController {
 
     @PutMapping
     public ResponseEntity<MemberNicknameResponse> updateMemberNickname(@Auth Long memberId, @RequestBody MemberUpdateRequest request) {
-        MemberNicknameResponse response = memberService.changeMemberNickname(memberId, request);
+        MemberNicknameResponse response = memberService.updateMemberNickname(memberId, request);
 
         return ResponseEntity.ok(response);
     }
