@@ -10,7 +10,6 @@ import java.util.UUID;
 
 import static weavers.siltarae.global.exception.ExceptionCode.*;
 
-@Slf4j
 @Getter
 public class Image {
 
