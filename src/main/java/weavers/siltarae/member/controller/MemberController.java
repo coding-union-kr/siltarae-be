@@ -25,9 +25,16 @@ public class MemberController {
         return ResponseEntity.ok(response);
     }
 
-    @PutMapping("/image")
-    public ResponseEntity<MemberImageResponse> changeMemberImage(@Auth Long memberId, @RequestPart(required = false) MultipartFile file) {
+    @PostMapping("/image")
+    public ResponseEntity<MemberImageResponse> uploadMemberImage(@Auth Long memberId, @RequestPart MultipartFile file) {
         MemberImageResponse response = memberService.updateMemberImage(memberId, file);
+
+        return ResponseEntity.ok(response);
+    }
+
+    @DeleteMapping("/image")
+    public ResponseEntity<MemberImageResponse> deleteMemberImage(@Auth Long memberId) {
+        MemberImageResponse response = memberService.updateMemberImage(memberId);
 
         return ResponseEntity.ok(response);
     }

@@ -39,13 +39,17 @@ public class MemberService {
 
     public MemberImageResponse updateMemberImage(Long memberId, MultipartFile file) {
         Member member = findMember(memberId);
+        String imageUrl = uploadMemberImage(file);
 
-        String imageUrl;
-        if (file == null || file.isEmpty()) {
-            imageUrl = member.getDefaultImageUrl();
-        } else {
-            imageUrl = uploadMemberImage(file);
-        }
+        deleteMemberImage(member);
+        member.updateImage(imageUrl);
+
+        return MemberImageResponse.from(imageUrl);
+    }
+
+    public MemberImageResponse updateMemberImage(Long memberId) {
+        Member member = findMember(memberId);
+        String imageUrl = member.getDefaultImageUrl();
 
         deleteMemberImage(member);
         member.updateImage(imageUrl);
