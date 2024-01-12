@@ -1,5 +1,6 @@
 package weavers.siltarae.member.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -40,7 +41,7 @@ public class MemberController {
     }
 
     @PutMapping
-    public ResponseEntity<MemberNicknameResponse> updateMemberNickname(@Auth Long memberId, @RequestBody MemberUpdateRequest request) {
+    public ResponseEntity<MemberNicknameResponse> updateMemberNickname(@Auth Long memberId, @RequestBody @Valid MemberUpdateRequest request) {
         MemberNicknameResponse response = memberService.updateMemberNickname(memberId, request);
 
         return ResponseEntity.ok(response);
