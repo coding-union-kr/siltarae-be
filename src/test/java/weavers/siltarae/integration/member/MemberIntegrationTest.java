@@ -4,7 +4,7 @@ import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.Test;
-import weavers.siltarae.integration.IntegrationTest;
+import weavers.siltarae.integration.BaseIntegrationTest;
 import weavers.siltarae.login.dto.response.TokenPair;
 
 import static io.restassured.http.ContentType.*;
@@ -13,7 +13,7 @@ import static org.springframework.http.HttpHeaders.*;
 import static org.springframework.http.HttpStatus.*;
 
 
-class MemberIntegrationTest extends IntegrationTest {
+class MemberIntegrationTest extends BaseIntegrationTest {
 
     @Test
     void 최대크기를_초과하는_이미지를_업로드하면_예외가_발생한다() {

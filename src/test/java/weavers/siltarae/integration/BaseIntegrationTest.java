@@ -13,7 +13,7 @@ import weavers.siltarae.member.domain.repository.MemberRepository;
 import static weavers.siltarae.member.domain.SocialType.GOOGLE;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class IntegrationTest {
+public class BaseIntegrationTest {
 
     @LocalServerPort
     private int port;
