@@ -11,8 +11,6 @@ import weavers.siltarae.member.dto.response.MemberNicknameResponse;
 import weavers.siltarae.member.dto.request.MemberUpdateRequest;
 import weavers.siltarae.member.service.MemberService;
 
-import java.net.URI;
-
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/member")
@@ -28,16 +26,15 @@ public class MemberController {
     }
 
     @PostMapping("/image")
-    public ResponseEntity<Void> uploadMemberImage(@Auth Long memberId, @RequestPart MultipartFile file) {
-        memberService.deleteMemberImage(memberId);
-        String imageUrl = memberService.uploadMemberImage(memberId, file);
+    public ResponseEntity<MemberImageResponse> uploadMemberImage(@Auth Long memberId, @RequestPart MultipartFile file) {
+        MemberImageResponse response = memberService.updateMemberImage(memberId, file);
 
-        return ResponseEntity.created(URI.create(imageUrl)).build();
+        return ResponseEntity.ok(response);
     }
 
     @DeleteMapping("/image")
     public ResponseEntity<MemberImageResponse> deleteMemberImage(@Auth Long memberId) {
-        MemberImageResponse response = memberService.deleteMemberImage(memberId);
+        MemberImageResponse response = memberService.updateMemberImage(memberId);
 
         return ResponseEntity.ok(response);
     }
