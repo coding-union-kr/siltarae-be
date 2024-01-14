@@ -11,5 +11,5 @@ import java.util.Optional;
 
 public interface CommentRepository extends JpaRepository<Comment, Long> {
     Page<Comment> findByMistakeAndDeletedAtIsNullOrderByIdDesc(Mistake mistake, Pageable pageable);
-    Optional<Comment> findByIdAndMemberAndDeletedAtIsNull(Long id, Member member);
+    Optional<Comment> findByIdAndMember_IdAndDeletedAtIsNull(Long id, Long memberId);
 }

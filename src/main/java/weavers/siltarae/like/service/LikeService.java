@@ -12,8 +12,6 @@ import weavers.siltarae.member.domain.repository.MemberRepository;
 import weavers.siltarae.mistake.domain.Mistake;
 import weavers.siltarae.mistake.domain.repository.MistakeRepository;
 
-import java.util.Objects;
-
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -25,7 +23,7 @@ public class LikeService {
 
 
     public void like(Long memberId, Long mistakeId) {
-        Member member = getTestUser(memberId);
+        Member member = getMemberFromId(memberId);
         Mistake mistake = getMistake(mistakeId);
 
         toggleLike(member, mistake);
@@ -55,7 +53,7 @@ public class LikeService {
         return mistakeRepository.findById(mistakeId).orElseThrow(() -> new BadRequestException(ExceptionCode.NOT_FOUND_MISTAKE));
     }
 
-    private Member getTestUser(Long memberId) {
+    private Member getMemberFromId(Long memberId) {
         return memberRepository.findById(memberId).orElseThrow(() -> new BadRequestException(ExceptionCode.NOT_FOUND_MEMBER));
     }
 }
