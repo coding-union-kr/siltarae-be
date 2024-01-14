@@ -36,7 +36,7 @@ public class CommentService {
     public CommentResponse save(CommentCreateRequest request, Long memberId) {
         Comment comment = commentRepository.save(
                 Comment.builder()
-                        .member(getTestUser(memberId))
+                        .member(getMemberFromId(memberId))
                         .mistake(getMistake(request.getMistakeId()))
                         .content(request.getContent())
                         .build()
@@ -51,20 +51,20 @@ public class CommentService {
     }
 
     public void delete(Long commentId, Long memberId) {
-        Comment comment = findMyComment(commentId, getTestUser(memberId));
+        Comment comment = findMyComment(commentId, memberId);
 
         comment.delete();
     }
 
-    private Comment findMyComment(Long commentId, Member member) {
-        return commentRepository.findByIdAndMemberAndDeletedAtIsNull(commentId, member).orElseThrow(() -> new BadRequestException(ExceptionCode.COMMENT_VALID_ERROR));
+    private Comment findMyComment(Long commentId, Long memberId) {
+        return commentRepository.findByIdAndMember_IdAndDeletedAtIsNull(commentId, memberId).orElseThrow(() -> new BadRequestException(ExceptionCode.COMMENT_VALID_ERROR));
     }
 
     private Mistake getMistake(Long mistakeId) {
         return mistakeRepository.findByIdAndDeletedAtIsNull(mistakeId).orElseThrow(() -> new BadRequestException(ExceptionCode.NOT_FOUND_MISTAKE));
     }
 
-    private Member getTestUser(Long memberId) {
+    private Member getMemberFromId(Long memberId) {
         return memberRepository.findById(memberId).orElseThrow(() -> new BadRequestException(ExceptionCode.NOT_FOUND_MEMBER));
     }
 }

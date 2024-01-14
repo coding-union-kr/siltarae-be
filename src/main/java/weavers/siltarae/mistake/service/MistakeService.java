@@ -34,7 +34,7 @@ public class MistakeService {
             MistakeCreateRequest request, Long memberId) {
         Mistake mistake = mistakeRepository.save(
                 Mistake.builder()
-                        .member(getTestUser(memberId))
+                        .member(getMemberFromId(memberId))
                         .content(request.getContent())
                         .tags(getTags(request.getTagIds(), memberId))
                         .build()
@@ -86,12 +86,12 @@ public class MistakeService {
     @Transactional
     public void deleteMistake(Long memberId, List<Long> mistakeIds) {
         List<Mistake> mistakes
-                = mistakeRepository.findByIdInAndMemberAndDeletedAtIsNull(mistakeIds, getTestUser(memberId));
+                = mistakeRepository.findByIdInAndMember_IdAndDeletedAtIsNull(mistakeIds, memberId);
 
         mistakes.forEach(Mistake::delete);
     }
 
-    private Member getTestUser(Long memberId) {
+    private Member getMemberFromId(Long memberId) {
         return memberRepository.findById(memberId).orElseThrow(() -> new BadRequestException(ExceptionCode.INVALID_MISTAKE_CONTENT_NULL));
     }
 
