@@ -69,7 +69,7 @@ public class MemberService {
         imageUtil.deleteImage(folder, member.getImageName());
     }
 
-    public MemberNicknameResponse changeMemberNickname(Long memberId, MemberUpdateRequest request) {
+    public MemberNicknameResponse updateMemberNickname(Long memberId, MemberUpdateRequest request) {
         Member member = findMember(memberId);
 
         member.updateNickname(request.getNickname());

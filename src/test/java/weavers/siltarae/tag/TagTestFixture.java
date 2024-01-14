@@ -4,9 +4,6 @@ import weavers.siltarae.member.domain.Member;
 import weavers.siltarae.member.domain.SocialType;
 import weavers.siltarae.tag.domain.Tag;
 
-import java.util.Arrays;
-import java.util.List;
-
 public class TagTestFixture {
 
     public static Tag COMPANY_TAG() {
@@ -14,7 +11,6 @@ public class TagTestFixture {
                 .id(1L)
                 .member(new Member(1L, "12345", "실타래", "siltarae@nn.com", SocialType.GOOGLE))
                 .name("회사")
-                .mistakes(Arrays.asList())
                 .build();
     }
 
@@ -23,7 +19,6 @@ public class TagTestFixture {
                 .id(2L)
                 .member(new Member(1L, "12345", "실타래", "siltarae@nn.com", SocialType.GOOGLE))
                 .name("일상")
-                .mistakes(Arrays.asList())
                 .build();
     }
 
@@ -32,7 +27,6 @@ public class TagTestFixture {
                             .id(3L)
                             .member(new Member(1L, "12345", "실타래", "siltarae@nn.com", SocialType.GOOGLE))
                             .name("모의고사")
-                            .mistakes(Arrays.asList())
                             .build();
 
         deletedTag.delete();
@@ -45,7 +39,6 @@ public class TagTestFixture {
                 .id(4L)
                 .member(new Member(2L, "54321", "꿀타래", "kkultarae@nn.com", SocialType.GOOGLE))
                 .name("학생회")
-                .mistakes(Arrays.asList())
                 .build();
     }
 }

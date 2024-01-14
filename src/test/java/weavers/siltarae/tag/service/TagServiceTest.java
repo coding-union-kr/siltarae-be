@@ -44,7 +44,7 @@ class TagServiceTest {
                 .willReturn(COMPANY_TAG());
 
         // when
-        final Long actualId = tagService.save(2L, tagCreateRequest);
+        final Long actualId = tagService.save(2L, tagCreateRequest).getId();
 
         // then
         assertThat(actualId).isEqualTo(1L);
