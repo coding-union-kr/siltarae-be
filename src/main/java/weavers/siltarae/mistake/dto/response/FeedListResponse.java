@@ -7,7 +7,6 @@ import org.springframework.data.domain.Page;
 import weavers.siltarae.mistake.domain.Mistake;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static lombok.AccessLevel.PROTECTED;
 
