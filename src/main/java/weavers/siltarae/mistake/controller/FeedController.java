@@ -21,7 +21,7 @@ public class FeedController {
 
     @GetMapping
     @Operation(summary = "피드 조회")
-    public ResponseEntity<FeedListResponse> getfeeds(
+    public ResponseEntity<FeedListResponse> getFeeds(
             @Valid FeedRequest request) {
 
         return ResponseEntity.ok(feedService.getfeedList(request));

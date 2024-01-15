@@ -11,11 +11,10 @@ import weavers.siltarae.global.image.domain.Image;
 import weavers.siltarae.login.domain.TokenProvider;
 import weavers.siltarae.member.domain.Member;
 import weavers.siltarae.member.domain.repository.MemberRepository;
+import weavers.siltarae.member.dto.response.MemberImageResponse;
 import weavers.siltarae.member.dto.response.MemberInfoResponse;
 import weavers.siltarae.member.dto.response.MemberNicknameResponse;
 import weavers.siltarae.member.dto.request.MemberUpdateRequest;
-
-import java.io.IOException;
 
 import static weavers.siltarae.global.exception.ExceptionCode.*;
 
@@ -31,42 +30,47 @@ public class MemberService {
     @Value("${cloud.aws.s3.folder.member}")
     private String folder;
 
+    @Transactional(readOnly = true)
     public MemberInfoResponse getMemberInfo(Long memberId) {
-        Member member = memberRepository.findByIdAndDeletedAtIsNull(memberId)
-                .orElseThrow(() -> new BadRequestException(NOT_FOUND_MEMBER));
+        Member member = findMember(memberId);
 
         return MemberInfoResponse.from(member);
     }
 
-    public String uploadMemberImage(Long memberId, MultipartFile file) {
-        Member member = memberRepository.findByIdAndDeletedAtIsNull(memberId)
-                .orElseThrow(() -> new BadRequestException(NOT_FOUND_MEMBER));
+    public MemberImageResponse updateMemberImage(Long memberId, MultipartFile file) {
+        Member member = findMember(memberId);
+        String imageUrl = uploadMemberImage(file);
 
-        Image image = new Image(file);
-        String imageUrl;
-        try {
-            imageUrl = imageUtil.uploadImage(folder, image);
-        } catch (IOException e) {
-            imageUrl = member.getDefaultImage();
-        }
-
+        deleteMemberImage(member);
         member.updateImage(imageUrl);
 
-        return imageUrl;
+        return MemberImageResponse.from(imageUrl);
     }
 
-    public void deleteMemberImage(Long memberId) {
-        Member member = memberRepository.findByIdAndDeletedAtIsNull(memberId)
-                .orElseThrow(() -> new BadRequestException(NOT_FOUND_MEMBER));
+    public MemberImageResponse updateMemberImage(Long memberId) {
+        Member member = findMember(memberId);
+        String imageUrl = member.getDefaultImageUrl();
 
+        deleteMemberImage(member);
+        member.updateImage(imageUrl);
+
+        return MemberImageResponse.from(imageUrl);
+    }
+
+    private String uploadMemberImage(MultipartFile file) {
+
+        Image image = new Image(file);
+        return imageUtil.uploadImage(folder, image);
+    }
+
+    private void deleteMemberImage(Member member) {
         if(member.hasDefaultImage()) return;
 
         imageUtil.deleteImage(folder, member.getImageName());
     }
 
-    public MemberNicknameResponse changeMemberNickname(Long memberId, MemberUpdateRequest request) {
-        Member member = memberRepository.findByIdAndDeletedAtIsNull(memberId)
-                .orElseThrow(() -> new BadRequestException(NOT_FOUND_MEMBER));
+    public MemberNicknameResponse updateMemberNickname(Long memberId, MemberUpdateRequest request) {
+        Member member = findMember(memberId);
 
         member.updateNickname(request.getNickname());
 
@@ -74,8 +78,7 @@ public class MemberService {
     }
 
     public void deleteMember(Long memberId, String refreshToken) {
-        Member member = memberRepository.findByIdAndDeletedAtIsNull(memberId)
-                .orElseThrow(() -> new BadRequestException(NOT_FOUND_MEMBER));
+        Member member = findMember(memberId);
 
         if(!member.hasDefaultImage()) {
             imageUtil.deleteImage(folder, member.getImageName());
@@ -83,5 +86,10 @@ public class MemberService {
         member.delete();
 
         tokenProvider.deleteRefreshToken(refreshToken);
+    }
+
+    private Member findMember(Long memberId) {
+        return memberRepository.findByIdAndDeletedAtIsNull(memberId)
+                .orElseThrow(() -> new BadRequestException(NOT_FOUND_MEMBER));
     }
 }

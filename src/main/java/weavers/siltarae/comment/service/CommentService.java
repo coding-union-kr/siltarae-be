@@ -9,6 +9,7 @@ import weavers.siltarae.comment.domain.repository.CommentRepository;
 import weavers.siltarae.comment.dto.request.CommentCreateRequest;
 import weavers.siltarae.comment.dto.request.CommentListRequest;
 import weavers.siltarae.comment.dto.response.CommentListResponse;
+import weavers.siltarae.comment.dto.response.CommentResponse;
 import weavers.siltarae.global.exception.BadRequestException;
 import weavers.siltarae.global.exception.ExceptionCode;
 import weavers.siltarae.member.domain.Member;
@@ -32,31 +33,38 @@ public class CommentService {
         return CommentListResponse.from(comments);
     }
 
-    public void save(CommentCreateRequest request, Long memberId) {
-        commentRepository.save(
+    public CommentResponse save(CommentCreateRequest request, Long memberId) {
+        Comment comment = commentRepository.save(
                 Comment.builder()
-                        .member(getTestUser(memberId))
+                        .member(getMemberFromId(memberId))
                         .mistake(getMistake(request.getMistakeId()))
                         .content(request.getContent())
                         .build()
         );
+
+        return CommentResponse.builder()
+                .commentId(comment.getId())
+                .commentContent(comment.getContent())
+                .memberId(comment.getMember().getId())
+                .memberName(comment.getMember().getNickname())
+                .build();
     }
 
     public void delete(Long commentId, Long memberId) {
-        Comment comment = findMyComment(commentId, getTestUser(memberId));
+        Comment comment = findMyComment(commentId, memberId);
 
         comment.delete();
     }
 
-    private Comment findMyComment(Long commentId, Member member) {
-        return commentRepository.findByIdAndMemberAndDeletedAtIsNull(commentId, member).orElseThrow(() -> new BadRequestException(ExceptionCode.COMMENT_VALID_ERROR));
+    private Comment findMyComment(Long commentId, Long memberId) {
+        return commentRepository.findByIdAndMember_IdAndDeletedAtIsNull(commentId, memberId).orElseThrow(() -> new BadRequestException(ExceptionCode.COMMENT_VALID_ERROR));
     }
 
     private Mistake getMistake(Long mistakeId) {
         return mistakeRepository.findByIdAndDeletedAtIsNull(mistakeId).orElseThrow(() -> new BadRequestException(ExceptionCode.NOT_FOUND_MISTAKE));
     }
 
-    private Member getTestUser(Long memberId) {
+    private Member getMemberFromId(Long memberId) {
         return memberRepository.findById(memberId).orElseThrow(() -> new BadRequestException(ExceptionCode.NOT_FOUND_MEMBER));
     }
 }
