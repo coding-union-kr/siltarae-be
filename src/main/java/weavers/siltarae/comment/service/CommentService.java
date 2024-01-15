@@ -9,6 +9,7 @@ import weavers.siltarae.comment.domain.repository.CommentRepository;
 import weavers.siltarae.comment.dto.request.CommentCreateRequest;
 import weavers.siltarae.comment.dto.request.CommentListRequest;
 import weavers.siltarae.comment.dto.response.CommentListResponse;
+import weavers.siltarae.comment.dto.response.CommentResponse;
 import weavers.siltarae.global.exception.BadRequestException;
 import weavers.siltarae.global.exception.ExceptionCode;
 import weavers.siltarae.member.domain.Member;
@@ -32,14 +33,21 @@ public class CommentService {
         return CommentListResponse.from(comments);
     }
 
-    public void save(CommentCreateRequest request, Long memberId) {
-        commentRepository.save(
+    public CommentResponse save(CommentCreateRequest request, Long memberId) {
+        Comment comment = commentRepository.save(
                 Comment.builder()
                         .member(getTestUser(memberId))
                         .mistake(getMistake(request.getMistakeId()))
                         .content(request.getContent())
                         .build()
         );
+
+        return CommentResponse.builder()
+                .commentId(comment.getId())
+                .commentContent(comment.getContent())
+                .memberId(comment.getMember().getId())
+                .memberName(comment.getMember().getNickname())
+                .build();
     }
 
     public void delete(Long commentId, Long memberId) {
