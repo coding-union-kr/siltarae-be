@@ -24,7 +24,7 @@ public class FeedController {
     public ResponseEntity<FeedListResponse> getFeeds(
             @Valid FeedRequest request) {
 
-        return ResponseEntity.ok(feedService.getfeedList(request));
+        return ResponseEntity.ok(feedService.getFeedList(request));
     }
 
 }
