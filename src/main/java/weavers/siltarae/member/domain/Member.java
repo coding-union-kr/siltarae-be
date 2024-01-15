@@ -79,7 +79,7 @@ public class Member extends BaseEntity {
         try {
             this.email = CryptoUtil.encrypt(email);
         } catch (NullPointerException e) {
-            throw new BadRequestException(ExceptionCode.MEMBER_EMAIL_ISNULL);
+            throw new BadRequestException(ExceptionCode.INVALID_EMAIL);
         } catch (Exception e) {
             throw new BadRequestException(ExceptionCode.FAIL_ENCRYPT);
         }
