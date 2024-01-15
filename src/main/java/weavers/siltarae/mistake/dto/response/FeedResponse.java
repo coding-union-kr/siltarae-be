@@ -31,7 +31,7 @@ public class FeedResponse {
         return FeedResponse.builder()
                 .id(mistake.getId())
                 .content(mistake.getContent())
-                .commentCount(mistake.getNotDeleteCommentCount(mistake))
+                .commentCount(mistake.getExistingCommentCount(mistake))
                 .likeCount(mistake.getLikes().size())
                 .memberId(mistake.getMember().getId())
                 .memberName(mistake.getMember().getNickname())
