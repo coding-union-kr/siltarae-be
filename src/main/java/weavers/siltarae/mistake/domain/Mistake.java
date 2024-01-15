@@ -50,4 +50,11 @@ public class Mistake extends BaseEntity {
         this.likes = likes;
     }
 
+    public Integer getExistingCommentCount(Mistake mistake) {
+        return mistake.getComments().stream()
+                .filter(comment -> comment.getDeletedAt() == null)
+                .mapToInt(comment -> 1)
+                .sum();
+    }
+
 }

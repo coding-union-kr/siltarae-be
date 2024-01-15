@@ -43,7 +43,7 @@ public class MistakeResponse {
         return MistakeResponse.builder()
                 .id(mistake.getId())
                 .content(mistake.getContent())
-                .commentCount(mistake.getComments().size())
+                .commentCount(mistake.getExistingCommentCount(mistake))
                 .likeCount(mistake.getLikes().size())
                 .tags(tag)
                 .memberId(mistake.getMember().getId())
