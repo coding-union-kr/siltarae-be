@@ -52,7 +52,7 @@ public class CryptoUtil {
         }
     }
 
-    private static Cipher createCipherForMode(int encryptMode) throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, InvalidAlgorithmParameterException {
+    private static Cipher createCipherForMode(int encryptMode) throws Exception {
         byte[] keyBytes = secretKey.getBytes(StandardCharsets.UTF_8);
         byte[] ivByte = Base64.getDecoder().decode(iv);
 
