@@ -1,7 +1,6 @@
 package weavers.siltarae.mistake.service;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -20,11 +19,9 @@ import weavers.siltarae.member.domain.Member;
 import weavers.siltarae.member.domain.repository.MemberRepository;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-@Slf4j
 public class MistakeService {
     private final MemberRepository memberRepository;
     private final MistakeRepository mistakeRepository;
@@ -54,7 +51,9 @@ public class MistakeService {
 
     private List<Long> getTagIdsFromRequest(MistakeListRequest request) {
         if (!request.getTag().isEmpty()) {
-            return getLongs(request);
+            return Arrays.stream(request.getTag().split(","))
+                    .map(Long::parseLong)
+                    .toList();
         }
 
         return Collections.emptyList();
@@ -66,12 +65,6 @@ public class MistakeService {
         }
 
         return mistakeRepository.findByMember_IdAndTags_IdInAndDeletedAtIsNullOrderByIdDesc(memberId, tagIds, pageable);
-    }
-
-    private static List<Long> getLongs(MistakeListRequest request) {
-        return Arrays.stream(request.getTag().split(","))
-                .map(Long::parseLong)
-                .toList();
     }
 
     @Transactional(readOnly = true)
@@ -96,28 +89,23 @@ public class MistakeService {
     }
 
     private List<Tag> getTags(List<Long> tagIds, Long memberId) {
-        List<Tag> tags
-                = tagRepository.findAllById(tagIds);
+        List<Tag> tags = tagRepository.findByIdInAndDeletedAtIsNull(tagIds);
 
-        validateTag(tagIds, memberId, tags);
+        validateTagByUser(memberId, tags);
+        validateExistingTag(tagIds, tags);
 
         return tags;
     }
 
-    private static void validateTag(List<Long> tagIds, Long memberId, List<Tag> tags) {
-        validateTagByUser(tagIds, memberId, tags);
-        validateExistingTag(tagIds, tags);
-    }
-
-    private static void validateTagByUser(List<Long> tagIds, Long memberId, List<Tag> tags) {
+    private static void validateTagByUser(Long memberId, List<Tag> tags) {
         if (tags.stream().anyMatch(tag -> !Objects.equals(tag.getMember().getId(), memberId))) {
-            throw new BadRequestException(ExceptionCode.INTERNAL_SEVER_ERROR);
+            throw new BadRequestException(ExceptionCode.NOT_FOUND_TAG_WITH_MEMBER);
         }
     }
 
     private static void validateExistingTag(List<Long> tagIds, List<Tag> tags) {
         if (!Objects.equals(tags.size(), tagIds.size())) {
-            throw new BadRequestException(ExceptionCode.INTERNAL_SEVER_ERROR);
+            throw new BadRequestException(ExceptionCode.NOT_FOUND_TAG);
         }
     }
 

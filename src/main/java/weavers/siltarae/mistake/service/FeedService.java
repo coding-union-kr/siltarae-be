@@ -17,7 +17,7 @@ import weavers.siltarae.mistake.dto.response.FeedListResponse;
 public class FeedService {
     private final MistakeRepository mistakeRepository;
 
-    public FeedListResponse getfeedList(FeedRequest request) {
+    public FeedListResponse getFeedList(FeedRequest request) {
         Page<Mistake> mistakes = switch (request.getFeedType()) {
             case FASTEST -> mistakeRepository.findByDeletedAtIsNullOrderByIdDesc(request.toPageable());
             case POPULAR -> mistakeRepository.findMistakesSortedByLikes(request.toPageable());
