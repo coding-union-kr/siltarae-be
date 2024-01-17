@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import weavers.siltarae.login.Auth;
 import weavers.siltarae.mistake.dto.request.FeedRequest;
 import weavers.siltarae.mistake.dto.response.FeedListResponse;
 import weavers.siltarae.mistake.service.FeedService;
@@ -22,9 +23,10 @@ public class FeedController {
     @GetMapping
     @Operation(summary = "피드 조회")
     public ResponseEntity<FeedListResponse> getFeeds(
-            @Valid FeedRequest request) {
+            @Valid FeedRequest request,
+            @Auth(required = false) Long memberId) {
 
-        return ResponseEntity.ok(feedService.getFeedList(request));
+        return ResponseEntity.ok(feedService.getFeedList(request, memberId));
     }
 
 }
