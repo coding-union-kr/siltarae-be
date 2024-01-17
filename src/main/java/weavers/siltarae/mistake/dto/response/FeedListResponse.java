@@ -22,9 +22,9 @@ public class FeedListResponse {
         this.feeds = feeds;
     }
 
-    public static FeedListResponse from (Page<Mistake> mistakes) {
+    public static FeedListResponse from(Page<Mistake> mistakes, Long memberId) {
         List<FeedResponse> feedResponses = mistakes.stream().map(
-                FeedResponse::from
+                feeds -> FeedResponse.from(feeds, memberId)
         ).toList();
 
         return FeedListResponse.builder()
