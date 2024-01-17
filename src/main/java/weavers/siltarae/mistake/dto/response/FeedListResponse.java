@@ -3,8 +3,6 @@ package weavers.siltarae.mistake.dto.response;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.data.domain.Page;
-import weavers.siltarae.mistake.domain.Mistake;
 
 import java.util.List;
 
@@ -22,13 +20,9 @@ public class FeedListResponse {
         this.feeds = feeds;
     }
 
-    public static FeedListResponse from(Page<Mistake> mistakes, Long memberId) {
-        List<FeedResponse> feedResponses = mistakes.stream().map(
-                feeds -> FeedResponse.from(feeds, memberId)
-        ).toList();
-
+    public static FeedListResponse from(List<FeedResponse> feedResponses, Long totalCount) {
         return FeedListResponse.builder()
-                .totalCount(mistakes.getTotalElements())
+                .totalCount(totalCount)
                 .feeds(feedResponses)
                 .build();
     }

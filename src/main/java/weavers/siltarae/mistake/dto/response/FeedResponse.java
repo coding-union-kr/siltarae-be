@@ -3,7 +3,6 @@ package weavers.siltarae.mistake.dto.response;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import weavers.siltarae.like.service.LikeService;
 import weavers.siltarae.mistake.domain.Mistake;
 
 import static lombok.AccessLevel.PROTECTED;
@@ -30,7 +29,7 @@ public class FeedResponse {
         this.likeAble = likeAble;
     }
 
-    public static FeedResponse from(Mistake mistake, Long memberId) {
+    public static FeedResponse from(Mistake mistake, Boolean likeAble) {
         return FeedResponse.builder()
                 .id(mistake.getId())
                 .content(mistake.getContent())
@@ -38,7 +37,7 @@ public class FeedResponse {
                 .likeCount(mistake.getLikes().size())
                 .memberId(mistake.getMember().getId())
                 .memberName(mistake.getMember().getNickname())
-                .likeAble(mistake.getLikeAbleFromMemberIdAndMistake(mistake, memberId))
+                .likeAble(likeAble)
                 .build();
     }
 
