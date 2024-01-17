@@ -57,9 +57,4 @@ public class Mistake extends BaseEntity {
                 .sum();
     }
 
-    public Boolean getLikeAbleFromMemberIdAndMistake(Mistake mistake, Long memberId) {
-        return mistake.getLikes().stream()
-                .anyMatch(like -> like.getMember().getId().equals(memberId));
-    }
-
 }
