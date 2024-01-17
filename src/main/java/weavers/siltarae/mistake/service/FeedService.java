@@ -17,13 +17,13 @@ import weavers.siltarae.mistake.dto.response.FeedListResponse;
 public class FeedService {
     private final MistakeRepository mistakeRepository;
 
-    public FeedListResponse getFeedList(FeedRequest request) {
+    public FeedListResponse getFeedList(FeedRequest request, Long memberId) {
         Page<Mistake> mistakes = switch (request.getFeedType()) {
             case FASTEST -> mistakeRepository.findByDeletedAtIsNullOrderByIdDesc(request.toPageable());
             case POPULAR -> mistakeRepository.findMistakesSortedByLikes(request.toPageable());
         };
 
-        return FeedListResponse.from(mistakes);
+        return FeedListResponse.from(mistakes, memberId);
     }
 
 
