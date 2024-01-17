@@ -27,17 +27,13 @@ public class MistakeListResponse {
         this.tags = tags;
     }
 
-    public static MistakeListResponse from (Page<Mistake> mistakes, List<Tag> tag) {
-        List<MistakeResponse> mistakeResponses = mistakes.getContent().stream().map(
-                MistakeResponse::from
-        ).collect(Collectors.toList());
-
+    public static MistakeListResponse from (List<MistakeResponse> mistakeResponses, List<Tag> tag, Long totalCount) {
         List<MistakeTagResponse> tagResponses = tag.stream()
         .map(MistakeTagResponse::from)
         .toList();
 
         return MistakeListResponse.builder()
-                .totalCount(mistakes.getTotalElements())
+                .totalCount(totalCount)
                 .mistakes(mistakeResponses)
                 .tags(tagResponses)
                 .build();

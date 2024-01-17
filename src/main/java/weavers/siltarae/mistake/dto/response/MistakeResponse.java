@@ -37,7 +37,7 @@ public class MistakeResponse {
         this.likeAble = likeAble;
     }
 
-    public static MistakeResponse from(Mistake mistake) {
+    public static MistakeResponse from(Mistake mistake, Boolean likeAble) {
         List<MistakeTagResponse> tag = mistake.getTags().stream().map(
                 MistakeTagResponse::from
         ).collect(Collectors.toList());
@@ -51,7 +51,7 @@ public class MistakeResponse {
                 .memberId(mistake.getMember().getId())
                 .memberName(mistake.getMember().getNickname())
                 .memberImageUrl(mistake.getMember().getImageUrl())
-                .likeAble(mistake.getLikeAbleFromMemberIdAndMistake(mistake, mistake.getMember().getId()))
+                .likeAble(likeAble)
                 .build();
     }
 
