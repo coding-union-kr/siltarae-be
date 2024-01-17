@@ -29,9 +29,16 @@ public class AuthArgumentResolver implements HandlerMethodArgumentResolver {
 
     @Override
     public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) {
-        HttpServletRequest request = (HttpServletRequest) webRequest.getNativeRequest();
-        String accessToken = accessTokenExtractor.extractAccessToken(request.getHeader(AUTHORIZATION));
+        Auth annotation = parameter.getParameterAnnotation(Auth.class);
 
+        HttpServletRequest request = (HttpServletRequest) webRequest.getNativeRequest();
+        String authorizationHeader = request.getHeader(AUTHORIZATION);
+
+        if(!annotation.required() && authorizationHeader==null) {
+            return null;
+        }
+
+        String accessToken = accessTokenExtractor.extractAccessToken(authorizationHeader);
         return tokenProvider.getMemberIdFromAccessToken(accessToken);
     }
 }
