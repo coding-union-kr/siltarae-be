@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import weavers.siltarae.global.exception.BadRequestException;
 import weavers.siltarae.global.exception.ExceptionCode;
-import weavers.siltarae.global.util.LikeAbleUtil;
+import weavers.siltarae.like.domain.repository.LikeRepository;
 import weavers.siltarae.member.domain.Member;
 import weavers.siltarae.member.domain.repository.MemberRepository;
 import weavers.siltarae.mistake.domain.Mistake;
@@ -31,7 +31,7 @@ public class MistakeService {
     private final MemberRepository memberRepository;
     private final MistakeRepository mistakeRepository;
     private final TagRepository tagRepository;
-    private final LikeAbleUtil likeAbleUtil;
+    private final LikeRepository likeRepository;
 
     public Long save(
             MistakeCreateRequest request, Long memberId) {
@@ -58,7 +58,7 @@ public class MistakeService {
     private List<MistakeResponse> getMistakeResponseList(List<Mistake> mistakes) {
         return mistakes.stream()
                 .map(mistake -> MistakeResponse.from(
-                        mistake, likeAbleUtil.getLikeAble(mistake.getId(), mistake.getMember().getId())
+                        mistake, likeRepository.existsByMistake_IdAndMember_Id(mistake.getId(), mistake.getMember().getId())
                 ))
                 .collect(Collectors.toList());
     }
@@ -87,7 +87,7 @@ public class MistakeService {
         .orElseThrow(() -> new BadRequestException(ExceptionCode.NOT_FOUND_MISTAKE)
         );
 
-        return MistakeResponse.from(mistake, likeAbleUtil.getLikeAble(mistakeId, mistake.getMember().getId()));
+        return MistakeResponse.from(mistake, likeRepository.existsByMistake_IdAndMember_Id(mistakeId, mistake.getMember().getId()));
     }
 
     @Transactional
