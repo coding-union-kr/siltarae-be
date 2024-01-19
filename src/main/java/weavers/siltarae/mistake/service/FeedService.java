@@ -29,7 +29,8 @@ public class FeedService {
             case POPULAR -> mistakeRepository.findMistakesSortedByLikes(request.toPageable());
         };
 
-        return FeedListResponse.from(getFeedResponseList(mistakes.getContent(), memberId), mistakes.getTotalElements());
+        List<FeedResponse> feedResponses = getFeedResponseList(mistakes.getContent(), memberId);
+        return FeedListResponse.from(feedResponses, mistakes.getTotalElements());
     }
 
     private List<FeedResponse> getFeedResponseList(List<Mistake> mistakes, Long memberId) {

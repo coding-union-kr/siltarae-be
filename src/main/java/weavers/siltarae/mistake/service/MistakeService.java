@@ -52,7 +52,8 @@ public class MistakeService {
         List<Tag> tags = getTags(tagIds, memberId);
         Page<Mistake> mistakes = getMistakes(memberId, tagIds, request.toPageable());
 
-        return MistakeListResponse.from(getMistakeResponseList(mistakes.getContent()), tags, mistakes.getTotalElements());
+        List<MistakeResponse> mistakeResponses = getMistakeResponseList(mistakes.getContent());
+        return MistakeListResponse.from(mistakeResponses, tags, mistakes.getTotalElements());
     }
 
     private List<MistakeResponse> getMistakeResponseList(List<Mistake> mistakes) {
