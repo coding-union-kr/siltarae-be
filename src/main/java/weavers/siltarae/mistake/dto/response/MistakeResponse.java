@@ -22,9 +22,10 @@ public class MistakeResponse {
     private Long memberId;
     private String memberName;
     private String memberImageUrl;
+    private Boolean likeAble;
 
     @Builder
-    public MistakeResponse(Long id, String content, List<MistakeTagResponse> tags, Integer commentCount, Integer likeCount, Long memberId, String memberName, String memberImageUrl) {
+    public MistakeResponse(Long id, String content, List<MistakeTagResponse> tags, Integer commentCount, Integer likeCount, Long memberId, String memberName, String memberImageUrl, Boolean likeAble) {
         this.id = id;
         this.content = content;
         this.tags = tags;
@@ -33,9 +34,10 @@ public class MistakeResponse {
         this.memberId = memberId;
         this.memberName = memberName;
         this.memberImageUrl = memberImageUrl;
+        this.likeAble = likeAble;
     }
 
-    public static MistakeResponse from(Mistake mistake) {
+    public static MistakeResponse from(Mistake mistake, Boolean likeAble) {
         List<MistakeTagResponse> tag = mistake.getTags().stream().map(
                 MistakeTagResponse::from
         ).collect(Collectors.toList());
@@ -49,6 +51,7 @@ public class MistakeResponse {
                 .memberId(mistake.getMember().getId())
                 .memberName(mistake.getMember().getNickname())
                 .memberImageUrl(mistake.getMember().getImageUrl())
+                .likeAble(likeAble)
                 .build();
     }
 

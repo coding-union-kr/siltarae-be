@@ -7,6 +7,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import weavers.siltarae.global.exception.BadRequestException;
 import weavers.siltarae.global.exception.ExceptionCode;
+import weavers.siltarae.like.domain.repository.LikeRepository;
+import weavers.siltarae.member.domain.Member;
+import weavers.siltarae.member.domain.repository.MemberRepository;
 import weavers.siltarae.mistake.domain.Mistake;
 import weavers.siltarae.mistake.domain.repository.MistakeRepository;
 import weavers.siltarae.mistake.dto.request.MistakeCreateRequest;
@@ -15,10 +18,12 @@ import weavers.siltarae.mistake.dto.response.MistakeListResponse;
 import weavers.siltarae.mistake.dto.response.MistakeResponse;
 import weavers.siltarae.tag.domain.Tag;
 import weavers.siltarae.tag.domain.repository.TagRepository;
-import weavers.siltarae.member.domain.Member;
-import weavers.siltarae.member.domain.repository.MemberRepository;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -26,6 +31,7 @@ public class MistakeService {
     private final MemberRepository memberRepository;
     private final MistakeRepository mistakeRepository;
     private final TagRepository tagRepository;
+    private final LikeRepository likeRepository;
 
     public Long save(
             MistakeCreateRequest request, Long memberId) {
@@ -46,7 +52,16 @@ public class MistakeService {
         List<Tag> tags = getTags(tagIds, memberId);
         Page<Mistake> mistakes = getMistakes(memberId, tagIds, request.toPageable());
 
-        return MistakeListResponse.from(mistakes, tags);
+        List<MistakeResponse> mistakeResponses = getMistakeResponseList(mistakes.getContent());
+        return MistakeListResponse.from(mistakeResponses, tags, mistakes.getTotalElements());
+    }
+
+    private List<MistakeResponse> getMistakeResponseList(List<Mistake> mistakes) {
+        return mistakes.stream()
+                .map(mistake -> MistakeResponse.from(
+                        mistake, likeRepository.existsByMistake_IdAndMember_Id(mistake.getId(), mistake.getMember().getId())
+                ))
+                .collect(Collectors.toList());
     }
 
     private List<Long> getTagIdsFromRequest(MistakeListRequest request) {
@@ -73,7 +88,7 @@ public class MistakeService {
         .orElseThrow(() -> new BadRequestException(ExceptionCode.NOT_FOUND_MISTAKE)
         );
 
-        return MistakeResponse.from(mistake);
+        return MistakeResponse.from(mistake, likeRepository.existsByMistake_IdAndMember_Id(mistakeId, mistake.getMember().getId()));
     }
 
     @Transactional
