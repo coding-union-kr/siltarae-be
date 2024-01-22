@@ -6,6 +6,9 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import weavers.siltarae.global.BaseEntity;
+import weavers.siltarae.global.exception.BadRequestException;
+import weavers.siltarae.global.exception.ExceptionCode;
+import weavers.siltarae.global.util.CryptoUtil;
 
 
 @Entity
@@ -68,6 +71,27 @@ public class Member extends BaseEntity {
 
     public String getImageName() {
         return this.imageUrl.substring(this.imageUrl.lastIndexOf("/")+1);
+    }
+
+    @PrePersist
+    @PreUpdate
+    public void encryptEmail() {
+        try {
+            this.email = CryptoUtil.encrypt(email);
+        } catch (NullPointerException e) {
+            throw new BadRequestException(ExceptionCode.INVALID_EMAIL);
+        } catch (Exception e) {
+            throw new BadRequestException(ExceptionCode.FAIL_ENCRYPT);
+        }
+    }
+
+    @PostLoad
+    public void decryptEmail() {
+        try {
+            this.email = CryptoUtil.decrypt(email);
+        } catch (Exception e) {
+            throw new BadRequestException(ExceptionCode.FAIL_DECRYPT);
+        }
     }
 
     @Builder

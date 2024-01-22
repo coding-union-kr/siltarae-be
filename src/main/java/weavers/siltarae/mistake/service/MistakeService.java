@@ -1,13 +1,15 @@
 package weavers.siltarae.mistake.service;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import weavers.siltarae.global.exception.BadRequestException;
 import weavers.siltarae.global.exception.ExceptionCode;
+import weavers.siltarae.like.domain.repository.LikeRepository;
+import weavers.siltarae.member.domain.Member;
+import weavers.siltarae.member.domain.repository.MemberRepository;
 import weavers.siltarae.mistake.domain.Mistake;
 import weavers.siltarae.mistake.domain.repository.MistakeRepository;
 import weavers.siltarae.mistake.dto.request.MistakeCreateRequest;
@@ -16,19 +18,20 @@ import weavers.siltarae.mistake.dto.response.MistakeListResponse;
 import weavers.siltarae.mistake.dto.response.MistakeResponse;
 import weavers.siltarae.tag.domain.Tag;
 import weavers.siltarae.tag.domain.repository.TagRepository;
-import weavers.siltarae.member.domain.Member;
-import weavers.siltarae.member.domain.repository.MemberRepository;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-@Slf4j
 public class MistakeService {
     private final MemberRepository memberRepository;
     private final MistakeRepository mistakeRepository;
     private final TagRepository tagRepository;
+    private final LikeRepository likeRepository;
 
     public Long save(
             MistakeCreateRequest request, Long memberId) {
@@ -49,12 +52,23 @@ public class MistakeService {
         List<Tag> tags = getTags(tagIds, memberId);
         Page<Mistake> mistakes = getMistakes(memberId, tagIds, request.toPageable());
 
-        return MistakeListResponse.from(mistakes, tags);
+        List<MistakeResponse> mistakeResponses = getMistakeResponseList(mistakes.getContent());
+        return MistakeListResponse.from(mistakeResponses, tags, mistakes.getTotalElements());
+    }
+
+    private List<MistakeResponse> getMistakeResponseList(List<Mistake> mistakes) {
+        return mistakes.stream()
+                .map(mistake -> MistakeResponse.from(
+                        mistake, likeRepository.existsByMistake_IdAndMember_Id(mistake.getId(), mistake.getMember().getId())
+                ))
+                .collect(Collectors.toList());
     }
 
     private List<Long> getTagIdsFromRequest(MistakeListRequest request) {
         if (!request.getTag().isEmpty()) {
-            return getLongs(request);
+            return Arrays.stream(request.getTag().split(","))
+                    .map(Long::parseLong)
+                    .toList();
         }
 
         return Collections.emptyList();
@@ -68,19 +82,13 @@ public class MistakeService {
         return mistakeRepository.findByMember_IdAndTags_IdInAndDeletedAtIsNullOrderByIdDesc(memberId, tagIds, pageable);
     }
 
-    private static List<Long> getLongs(MistakeListRequest request) {
-        return Arrays.stream(request.getTag().split(","))
-                .map(Long::parseLong)
-                .toList();
-    }
-
     @Transactional(readOnly = true)
     public MistakeResponse getMistake(Long mistakeId) {
         Mistake mistake = mistakeRepository.findByIdAndDeletedAtIsNull(mistakeId)
         .orElseThrow(() -> new BadRequestException(ExceptionCode.NOT_FOUND_MISTAKE)
         );
 
-        return MistakeResponse.from(mistake);
+        return MistakeResponse.from(mistake, likeRepository.existsByMistake_IdAndMember_Id(mistakeId, mistake.getMember().getId()));
     }
 
     @Transactional
@@ -96,28 +104,23 @@ public class MistakeService {
     }
 
     private List<Tag> getTags(List<Long> tagIds, Long memberId) {
-        List<Tag> tags
-                = tagRepository.findAllById(tagIds);
+        List<Tag> tags = tagRepository.findByIdInAndDeletedAtIsNull(tagIds);
 
-        validateTag(tagIds, memberId, tags);
+        validateTagByUser(memberId, tags);
+        validateExistingTag(tagIds, tags);
 
         return tags;
     }
 
-    private static void validateTag(List<Long> tagIds, Long memberId, List<Tag> tags) {
-        validateTagByUser(tagIds, memberId, tags);
-        validateExistingTag(tagIds, tags);
-    }
-
-    private static void validateTagByUser(List<Long> tagIds, Long memberId, List<Tag> tags) {
+    private static void validateTagByUser(Long memberId, List<Tag> tags) {
         if (tags.stream().anyMatch(tag -> !Objects.equals(tag.getMember().getId(), memberId))) {
-            throw new BadRequestException(ExceptionCode.INTERNAL_SEVER_ERROR);
+            throw new BadRequestException(ExceptionCode.NOT_FOUND_TAG_WITH_MEMBER);
         }
     }
 
     private static void validateExistingTag(List<Long> tagIds, List<Tag> tags) {
         if (!Objects.equals(tags.size(), tagIds.size())) {
-            throw new BadRequestException(ExceptionCode.INTERNAL_SEVER_ERROR);
+            throw new BadRequestException(ExceptionCode.NOT_FOUND_TAG);
         }
     }
 
