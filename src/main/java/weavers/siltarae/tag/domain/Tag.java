@@ -28,7 +28,7 @@ public class Tag extends BaseEntity {
     private Member member;
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinTable(name = "tag_mistake",
+    @JoinTable(name = "mistake_tag",
         joinColumns = @JoinColumn(name = "tag_id"),
         inverseJoinColumns = @JoinColumn(name = "mistake_id"))
     private List<Mistake> mistakes;

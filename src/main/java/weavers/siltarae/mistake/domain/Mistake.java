@@ -30,7 +30,7 @@ public class Mistake extends BaseEntity {
     private String content;
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinTable(name = "tag_mistake",
+    @JoinTable(name = "mistake_tag",
             joinColumns = @JoinColumn(name = "mistake_id"),
             inverseJoinColumns = @JoinColumn(name = "tag_id"))
     private List<Tag> tags;
