@@ -24,7 +24,7 @@ public class LoginService {
     private final TokenProvider tokenProvider;
     private final GoogleProvider googleProvider;
 
-    public TokenPair login(String socialType, String code) {
+    public TokenPair login(String code) {
         String authAccessToken = googleProvider.requestAccessToken(code);
         MemberInfoResponse memberInfo = googleProvider.getMemberInfo(authAccessToken);
 
