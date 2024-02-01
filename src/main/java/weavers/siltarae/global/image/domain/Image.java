@@ -1,7 +1,6 @@
 package weavers.siltarae.global.image.domain;
 
 import lombok.Getter;
-import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.web.multipart.MultipartFile;
 import weavers.siltarae.global.exception.BadRequestException;
