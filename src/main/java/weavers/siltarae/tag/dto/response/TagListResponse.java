@@ -4,10 +4,8 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import weavers.siltarae.tag.domain.Tag;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -23,10 +21,7 @@ public class TagListResponse {
         this.tags = tags;
     }
 
-    public static TagListResponse from(List<Tag> tagList) {
-        List<TagResponse> tagResponseList = tagList.stream()
-                .map(TagResponse::from).collect(Collectors.toList());
-
+    public static TagListResponse from(List<TagResponse> tagResponseList) {
         return TagListResponse.builder()
                 .totalCount(tagResponseList.size())
                 .tags(tagResponseList)
