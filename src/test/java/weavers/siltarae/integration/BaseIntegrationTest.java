@@ -6,8 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.transaction.annotation.Transactional;
-import weavers.siltarae.login.domain.TokenProvider;
-import weavers.siltarae.login.dto.response.TokenPair;
+import weavers.siltarae.login.infrastructure.TokenProvider;
+import weavers.siltarae.login.domain.TokenPair;
 import weavers.siltarae.member.domain.Member;
 import weavers.siltarae.member.domain.repository.MemberRepository;
 

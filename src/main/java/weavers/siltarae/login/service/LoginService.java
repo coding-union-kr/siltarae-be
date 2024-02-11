@@ -6,12 +6,12 @@ import org.springframework.transaction.annotation.Transactional;
 import weavers.siltarae.global.exception.AuthException;
 import weavers.siltarae.global.exception.ExceptionCode;
 import weavers.siltarae.login.AccessTokenExtractor;
-import weavers.siltarae.login.domain.GoogleProvider;
+import weavers.siltarae.login.infrastructure.GoogleProvider;
 import weavers.siltarae.login.domain.LoginInfo;
-import weavers.siltarae.login.domain.TokenProvider;
+import weavers.siltarae.login.infrastructure.TokenProvider;
 import weavers.siltarae.login.dto.response.AccessTokenResponse;
 import weavers.siltarae.login.dto.response.MemberInfoResponse;
-import weavers.siltarae.login.dto.response.TokenPair;
+import weavers.siltarae.login.domain.TokenPair;
 import weavers.siltarae.member.domain.Member;
 import weavers.siltarae.member.domain.repository.MemberRepository;
 

@@ -8,7 +8,7 @@ import org.springframework.web.multipart.MultipartFile;
 import weavers.siltarae.global.exception.BadRequestException;
 import weavers.siltarae.global.image.ImageUtil;
 import weavers.siltarae.global.image.domain.Image;
-import weavers.siltarae.login.domain.TokenProvider;
+import weavers.siltarae.login.infrastructure.TokenProvider;
 import weavers.siltarae.member.domain.Member;
 import weavers.siltarae.member.domain.repository.MemberRepository;
 import weavers.siltarae.member.dto.response.MemberImageResponse;

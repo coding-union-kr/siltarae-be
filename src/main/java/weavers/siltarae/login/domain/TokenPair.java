@@ -1,4 +1,4 @@
-package weavers.siltarae.login.dto.response;
+package weavers.siltarae.login.domain;
 
 import lombok.AccessLevel;
 import lombok.Builder;

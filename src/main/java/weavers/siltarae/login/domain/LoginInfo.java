@@ -4,7 +4,6 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import weavers.siltarae.login.dto.response.TokenPair;
 import weavers.siltarae.member.domain.Member;
 
 @Getter

@@ -1,4 +1,4 @@
-package weavers.siltarae.login.domain;
+package weavers.siltarae.login.infrastructure;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
