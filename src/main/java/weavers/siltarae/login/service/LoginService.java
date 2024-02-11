@@ -24,8 +24,8 @@ public class LoginService {
     private final TokenProvider tokenProvider;
     private final GoogleProvider googleProvider;
 
-    public TokenPair login(String code) {
-        String authAccessToken = googleProvider.requestAccessToken(code);
+    public TokenPair login(String code, String redirectUri) {
+        String authAccessToken = googleProvider.requestAccessToken(code, redirectUri);
         MemberInfoResponse memberInfo = googleProvider.getMemberInfo(authAccessToken);
 
         Member member = memberRepository.findByIdentifier(memberInfo.getIdentifier())

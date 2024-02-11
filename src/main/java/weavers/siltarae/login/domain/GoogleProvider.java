@@ -54,12 +54,12 @@ public class GoogleProvider extends OAuthProvider {
     }
 
     @Override
-    public String requestAccessToken(final String code) {
+    public String requestAccessToken(final String code, final String redirectUri) {
 
         OAuthAccessTokenRequest request = OAuthAccessTokenRequest.builder()
                 .clientId(CLIENT_ID)
                 .clientSecret(CLIENT_SECRET)
-                .redirectUri(REDIRECT_URI)
+                .redirectUri(redirectUri)
                 .grantType(GRANT_TYPE)
                 .code(code).build();
 
