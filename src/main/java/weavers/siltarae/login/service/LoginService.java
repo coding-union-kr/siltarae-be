@@ -24,8 +24,8 @@ public class LoginService {
     private final TokenProvider tokenProvider;
     private final GoogleProvider googleProvider;
 
-    public TokenPair login(String socialType, String code) {
-        String authAccessToken = googleProvider.requestAccessToken(code);
+    public TokenPair login(String code, String redirectUri) {
+        String authAccessToken = googleProvider.requestAccessToken(code, redirectUri);
         MemberInfoResponse memberInfo = googleProvider.getMemberInfo(authAccessToken);
 
         Member member = memberRepository.findByIdentifier(memberInfo.getIdentifier())
@@ -42,7 +42,7 @@ public class LoginService {
             throw new AuthException(ExceptionCode.FAIL_TO_VALIDATE_TOKEN);
         }
 
-        Long memberId = tokenProvider.getMemberIdFromAccessToken(accessToken);
+        Long memberId = tokenProvider.getMemberIdFromRefreshToken(refreshToken);
         String newAccessToken = tokenProvider.renewAccessToken(memberId);
 
         return AccessTokenResponse.builder()

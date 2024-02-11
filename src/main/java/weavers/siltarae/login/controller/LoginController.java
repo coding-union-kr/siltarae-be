@@ -26,7 +26,7 @@ public class LoginController {
     public ResponseEntity<AccessTokenResponse> login(@PathVariable final String socialType,
                                                      @RequestBody final LoginRequest request) {
 
-        final TokenPair tokenPair = loginService.login(socialType, request.getAuthCode());
+        final TokenPair tokenPair = loginService.login(request.getAuthCode(), request.getRedirectUri());
 
         ResponseCookie cookie = ResponseCookie.from("refresh-token", tokenPair.getRefreshToken())
                 .maxAge(tokenPair.getRefreshTokenExpirationTime())

@@ -13,20 +13,20 @@ public class TagResponse {
     private Long id;
     private String name;
 
-    private Integer mistakeCount;
+    private Long mistakeCount;
 
     @Builder
-    public TagResponse(Long id, String name, Integer mistakeCount) {
+    public TagResponse(Long id, String name, Long mistakeCount) {
         this.id = id;
         this.name = name;
         this.mistakeCount = mistakeCount;
     }
 
-    public static TagResponse from(Tag tag) {
+    public static TagResponse from(Tag tag, Long mistakeCount) {
         return TagResponse.builder()
                 .id(tag.getId())
                 .name(tag.getName())
-                .mistakeCount(tag.getMistakes().size())
+                .mistakeCount(mistakeCount)
                 .build();
     }
 }

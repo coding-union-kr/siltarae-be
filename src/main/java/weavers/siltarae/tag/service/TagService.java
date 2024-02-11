@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import weavers.siltarae.global.exception.BadRequestException;
+import weavers.siltarae.mistake.domain.repository.MistakeRepository;
 import weavers.siltarae.tag.domain.repository.TagRepository;
 import weavers.siltarae.tag.domain.Tag;
 import weavers.siltarae.tag.dto.request.TagCreateRequest;
@@ -13,6 +14,7 @@ import weavers.siltarae.member.domain.repository.MemberRepository;
 import weavers.siltarae.tag.dto.response.TagResponse;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static weavers.siltarae.global.exception.ExceptionCode.*;
 
@@ -22,6 +24,8 @@ import static weavers.siltarae.global.exception.ExceptionCode.*;
 public class TagService {
 
     private final TagRepository tagRepository;
+
+    private final MistakeRepository mistakeRepository;
 
     private final MemberRepository memberRepository;
 
@@ -40,14 +44,20 @@ public class TagService {
 
         Tag tag = tagRepository.save(createdTag);
 
-        return TagResponse.from(tag);
+        return TagResponse.from(tag, mistakeRepository.countByTags_IdAndDeletedAtIsNull(tag.getId()));
     }
 
     @Transactional(readOnly = true)
     public TagListResponse getTagList(final Long memberId) {
         List<Tag> tagList = tagRepository.findAllByMember_IdAndDeletedAtIsNull(memberId);
+        List<TagResponse> tagResponseList = tagList.stream()
+                .map(tag -> TagResponse.from(
+                        tag,
+                        mistakeRepository.countByTags_IdAndDeletedAtIsNull(tag.getId())
+                ))
+                .collect(Collectors.toList());
 
-        return TagListResponse.from(tagList);
+        return TagListResponse.from(tagResponseList);
     }
 
     public void deleteTags(final Long memberId, final List<Long> tagIdList) {

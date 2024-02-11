@@ -16,6 +16,8 @@ import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.UUID;
 
+import static weavers.siltarae.global.exception.ExceptionCode.*;
+
 @Component
 public class TokenProvider {
 
@@ -91,15 +93,22 @@ public class TokenProvider {
 
     private void validateRefreshToken(final String token, final Long memberId) {
         RefreshToken refreshToken = refreshTokenRepository.findById(token)
-                .orElseThrow(() -> new RefreshTokenException(ExceptionCode.EXPIRED_REFRESH_TOKEN));
+                .orElseThrow(() -> new RefreshTokenException(EXPIRED_REFRESH_TOKEN));
 
         if(!memberId.equals(refreshToken.getMemberId())) {
-            throw new BadRequestException(ExceptionCode.INVALID_REFRESH_TOKEN);
+            throw new BadRequestException(INVALID_REFRESH_TOKEN);
         }
     }
 
     public Long getMemberIdFromAccessToken(final String accessToken) {
         return Long.parseLong(parseJwt(accessToken).getSubject());
+    }
+
+    public Long getMemberIdFromRefreshToken(final String refreshToken) {
+        RefreshToken token = refreshTokenRepository.findById(refreshToken)
+                .orElseThrow(() -> new RefreshTokenException(INVALID_REFRESH_TOKEN));
+
+        return token.getMemberId();
     }
 
     private Claims parseJwt(final String token) {
@@ -111,9 +120,9 @@ public class TokenProvider {
                     .getPayload();
 
         } catch (ExpiredJwtException e) {
-            throw new AccessTokenException(ExceptionCode.EXPIRED_ACCESS_TOKEN);
+            throw new AccessTokenException(EXPIRED_ACCESS_TOKEN);
         } catch (JwtException | IllegalArgumentException e) {
-            throw new BadRequestException(ExceptionCode.INVALID_ACCESS_TOKEN);
+            throw new BadRequestException(INVALID_ACCESS_TOKEN);
         }
     }
 

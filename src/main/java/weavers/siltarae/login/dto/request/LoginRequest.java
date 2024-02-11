@@ -10,9 +10,12 @@ import lombok.NoArgsConstructor;
 public class LoginRequest {
 
     private String authCode;
+    private String redirectUri;
 
     @Builder
-    public LoginRequest(String authCode) {
+    public LoginRequest(String authCode, String redirectUri) {
+
         this.authCode = authCode;
+        this.redirectUri = redirectUri;
     }
 }
