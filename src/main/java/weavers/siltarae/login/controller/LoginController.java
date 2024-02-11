@@ -9,7 +9,8 @@ import org.springframework.web.bind.annotation.*;
 import weavers.siltarae.login.Auth;
 import weavers.siltarae.login.dto.request.LoginRequest;
 import weavers.siltarae.login.dto.response.AccessTokenResponse;
-import weavers.siltarae.login.dto.response.TokenPair;
+import weavers.siltarae.login.domain.LoginInfo;
+import weavers.siltarae.login.dto.response.LoginResponse;
 import weavers.siltarae.login.service.LoginService;
 
 import static org.springframework.http.HttpHeaders.SET_COOKIE;
@@ -23,26 +24,24 @@ public class LoginController {
     private final LoginService loginService;
 
     @PostMapping("/login/{socialType}")
-    public ResponseEntity<AccessTokenResponse> login(@PathVariable final String socialType,
-                                                     @RequestBody final LoginRequest request) {
+    public ResponseEntity<LoginResponse> login(@PathVariable final String socialType,
+                                               @RequestBody final LoginRequest request) {
 
-        final TokenPair tokenPair = loginService.login(request.getAuthCode(), request.getRedirectUri());
+        LoginInfo loginInfo = loginService.login(request.getAuthCode(), request.getRedirectUri());
 
-        ResponseCookie cookie = ResponseCookie.from("refresh-token", tokenPair.getRefreshToken())
-                .maxAge(tokenPair.getRefreshTokenExpirationTime())
+        ResponseCookie cookie = ResponseCookie.from("refresh-token", loginInfo.getRefreshToken())
+                .maxAge(loginInfo.getRefreshTokenExpirationTime())
                 .sameSite("None")
                 .secure(true)
                 .httpOnly(true)
                 .path("/")
                 .build();
 
-        AccessTokenResponse accessTokenResponse = AccessTokenResponse.builder()
-                .accessToken(tokenPair.getAccessToken())
-                .build();
+        LoginResponse response = LoginResponse.from(loginInfo);
 
         return ResponseEntity.status(HttpStatus.CREATED)
                 .header(SET_COOKIE, cookie.toString())
-                .body(accessTokenResponse);
+                .body(response);
     }
 
     @PostMapping("/token")
