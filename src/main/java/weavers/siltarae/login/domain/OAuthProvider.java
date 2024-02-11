@@ -12,6 +12,6 @@ public abstract class OAuthProvider {
 
     abstract MemberInfoResponse getMemberInfo(String accessToken);
 
-    abstract String requestAccessToken(String code);
+    abstract String requestAccessToken(String code, String redirectUri);
 
 }
