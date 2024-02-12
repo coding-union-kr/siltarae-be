@@ -1,4 +1,4 @@
-package weavers.siltarae.login.domain;
+package weavers.siltarae.login.infrastructure;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -8,8 +8,9 @@ import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import weavers.siltarae.global.exception.*;
+import weavers.siltarae.login.domain.RefreshToken;
 import weavers.siltarae.login.domain.repository.RefreshTokenRepository;
-import weavers.siltarae.login.dto.response.TokenPair;
+import weavers.siltarae.login.domain.TokenPair;
 
 import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;

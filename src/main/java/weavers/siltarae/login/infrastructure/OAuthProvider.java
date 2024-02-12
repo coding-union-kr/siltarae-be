@@ -1,4 +1,4 @@
-package weavers.siltarae.login.domain;
+package weavers.siltarae.login.infrastructure;
 
 import weavers.siltarae.login.dto.response.MemberInfoResponse;
 

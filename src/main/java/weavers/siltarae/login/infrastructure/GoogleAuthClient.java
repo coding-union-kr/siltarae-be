@@ -1,4 +1,4 @@
-package weavers.siltarae.login.domain;
+package weavers.siltarae.login.infrastructure;
 
 import feign.Headers;
 import org.springframework.cloud.openfeign.FeignClient;
