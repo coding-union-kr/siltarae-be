@@ -10,7 +10,7 @@ import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.ModelAndViewContainer;
 import weavers.siltarae.login.AuthArgumentResolver;
-import weavers.siltarae.login.domain.TokenProvider;
+import weavers.siltarae.login.infrastructure.TokenProvider;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
