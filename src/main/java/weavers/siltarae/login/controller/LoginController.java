@@ -23,13 +23,15 @@ public class LoginController {
 
     private final LoginService loginService;
 
+    private final String REFRESH_TOKEN = "refresh-token";
+
     @PostMapping("/login/{socialType}")
     public ResponseEntity<LoginResponse> login(@PathVariable final String socialType,
                                                @RequestBody final LoginRequest request) {
 
         LoginInfo loginInfo = loginService.login(request.getAuthCode(), request.getRedirectUri());
 
-        ResponseCookie cookie = ResponseCookie.from("refresh-token", loginInfo.getRefreshToken())
+        ResponseCookie cookie = ResponseCookie.from(REFRESH_TOKEN, loginInfo.getRefreshToken())
                 .maxAge(loginInfo.getRefreshTokenExpirationTime())
                 .sameSite("None")
                 .secure(true)
@@ -61,7 +63,14 @@ public class LoginController {
             @CookieValue("refresh-token") final String refreshToken) {
         loginService.logout(refreshToken);
 
-        return ResponseEntity.noContent().build();
+        ResponseCookie cookie = ResponseCookie.from(REFRESH_TOKEN, null)
+                .maxAge(0)
+                .path("/")
+                .build();
+
+        return ResponseEntity.noContent()
+                .header(SET_COOKIE, cookie.toString())
+                .build();
     }
 
 }
