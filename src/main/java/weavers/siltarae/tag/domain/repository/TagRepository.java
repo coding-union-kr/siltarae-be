@@ -6,7 +6,7 @@ import weavers.siltarae.tag.domain.Tag;
 import java.util.List;
 
 public interface TagRepository extends JpaRepository<Tag, Long> {
-    boolean existsByMember_IdAndName(Long memberId, String name);
+    boolean existsByMember_IdAndNameAndDeletedAtIsNull(Long memberId, String name);
 
     List<Tag> findAllByMember_IdAndDeletedAtIsNull(Long userId);
 

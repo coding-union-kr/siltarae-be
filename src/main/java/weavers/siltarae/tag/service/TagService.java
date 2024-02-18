@@ -71,7 +71,7 @@ public class TagService {
     }
 
     private boolean checkDuplicateTagName(final Long memberId, final String tagName) {
-        return tagRepository.existsByMember_IdAndName(memberId, tagName);
+        return tagRepository.existsByMember_IdAndNameAndDeletedAtIsNull(memberId, tagName);
     }
 
     private boolean hasDeletedTag(List<Tag> tagList) {
