@@ -42,12 +42,7 @@ public class CommentService {
                         .build()
         );
 
-        return CommentResponse.builder()
-                .commentId(comment.getId())
-                .commentContent(comment.getContent())
-                .memberId(comment.getMember().getId())
-                .memberName(comment.getMember().getNickname())
-                .build();
+        return CommentResponse.from(comment);
     }
 
     public void delete(Long commentId, Long memberId) {
