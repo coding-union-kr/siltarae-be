@@ -56,7 +56,7 @@ class TagServiceTest {
         TagCreateRequest request = new TagCreateRequest("회사");
         given(memberRepository.findById(anyLong()))
                 .willReturn(Optional.ofNullable(USER_KIM()));
-        given(tagRepository.existsByMember_IdAndName(1L, "회사"))
+        given(tagRepository.existsByMember_IdAndNameAndDeletedAtIsNull(1L, "회사"))
                 .willReturn(true);
 
         // when
