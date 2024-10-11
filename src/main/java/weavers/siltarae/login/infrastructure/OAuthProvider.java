@@ -2,16 +2,12 @@ package weavers.siltarae.login.infrastructure;
 
 import weavers.siltarae.login.dto.response.MemberInfoResponse;
 
-public abstract class OAuthProvider {
+public interface OAuthProvider {
 
-    String SOCIAL_TYPE;
+    boolean isMatched(String socialType);
 
-    boolean isMatched(String socialType) {
-        return socialType.equals(SOCIAL_TYPE);
-    }
+    MemberInfoResponse getMemberInfo(String accessToken);
 
-    abstract MemberInfoResponse getMemberInfo(String accessToken);
-
-    abstract String requestAccessToken(String code, String redirectUri);
+    String requestAccessToken(String code, String redirectUri);
 
 }
