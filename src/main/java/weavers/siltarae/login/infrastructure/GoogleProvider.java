@@ -17,7 +17,7 @@ import java.net.URI;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class GoogleProvider extends OAuthProvider {
+public class GoogleProvider implements OAuthProvider {
 
     private final GoogleAuthClient googleAuthClient;
 
@@ -37,6 +37,11 @@ public class GoogleProvider extends OAuthProvider {
 
     @Value("${oauth2.google.member-info-base-uri}")
     private String MEMBER_INFO_BASE_URI;
+
+    @Override
+    public boolean isMatched(String socialType) {
+        return socialType.equals(SOCIAL_TYPE);
+    }
 
     @Override
     public MemberInfoResponse getMemberInfo(String accessToken) {
