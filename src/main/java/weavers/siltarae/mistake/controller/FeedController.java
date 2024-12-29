@@ -24,7 +24,7 @@ public class FeedController {
     @Operation(summary = "피드 조회")
     public ResponseEntity<FeedListResponse> getFeeds(
             @Valid FeedRequest request,
-            @Auth(required = false) Long memberId) {
+            @Auth Long memberId) {
 
         return ResponseEntity.ok(feedService.getFeedList(request, memberId));
     }
